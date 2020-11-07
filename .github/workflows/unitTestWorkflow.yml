@@ -5,6 +5,8 @@ on:
   pull_request:
     branches:
       - develop
+      - release/*
+      - hotfix/*
 
 jobs:
   testing:
@@ -24,7 +26,7 @@ jobs:
       - name: Decode google-services.json
         env:
           FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
-        run: echo $FIREBASE_CONFIG > app/src/dev/devgoogle-services.json
+        run: echo $FIREBASE_CONFIG > app/src/dev/google-services.json
 
       - name: Build the app
         run: ./gradlew build
