@@ -5,8 +5,8 @@ on:
   pull_request:
     branches:
       - develop
-      - release/*
-      - hotfix/*
+      - "release/*"
+      - "hotfix/*"
 
 jobs:
   testing:
