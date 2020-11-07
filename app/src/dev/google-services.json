@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1008016416672",
+    "firebase_url": "https://boardy-dev.firebaseio.com",
+    "project_id": "boardy-dev",
+    "storage_bucket": "boardy-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1008016416672:android:c24868c96e9cb62b734ec5",
+        "android_client_info": {
+          "package_name": "com.kostovtd.boardy.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1008016416672-og9qqvs5pep6m286umpad7k14hha5dm4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kostovtd.boardy.dev",
+            "certificate_hash": "dcfd7af203ef48861cb5deda9032b62c96b38dbd"
+          }
+        },
+        {
+          "client_id": "1008016416672-4eqlmd2jndh4ni8kkc3e4tlhditq1kip.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnybksg95T3DoInihnDSM1zbCTuDYPgUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1008016416672-4eqlmd2jndh4ni8kkc3e4tlhditq1kip.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
