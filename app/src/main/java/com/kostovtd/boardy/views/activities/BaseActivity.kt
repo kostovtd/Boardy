@@ -5,12 +5,17 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import com.kostovtd.boardy.R
+import com.kostovtd.boardy.data.ErrorType
+import com.kostovtd.boardy.util.ErrorMessageHandler
 import kotlinx.android.synthetic.main.activity_base.*
 
 /**
  * Created by tosheto on 14.11.20.
  */
 abstract class BaseActivity : AppCompatActivity(), BaseView {
+
+    private lateinit var errorMessageHandler: ErrorMessageHandler
+
 
     protected abstract fun getLayout(): View
 
@@ -21,6 +26,8 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setContentLayout()
+
+        errorMessageHandler = ErrorMessageHandler(this, baseRootContainer)
     }
 
 
@@ -31,6 +38,16 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 
     override fun hideLoading() {
         progressBarContainer.visibility = View.GONE
+    }
+
+
+    override fun finishActivity() {
+        finish()
+    }
+
+
+    override fun showError(errorType: ErrorType) {
+        errorMessageHandler.showErrorSnackbar(errorType)
     }
 
 

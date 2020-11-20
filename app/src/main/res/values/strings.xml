@@ -4,4 +4,8 @@
     <string name="sing_up">Sign up</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+
+    <!-- ERROR MESSAGES -->
+    <string name="something_went_wrong">Someting went wrong. Please, try again!</string>
+    <string name="wrong_credentials">Wrong username or password</string>
 </resources>

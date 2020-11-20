@@ -1,5 +1,6 @@
 package com.kostovtd.boardy.presenters
 
+import com.kostovtd.boardy.data.ErrorType
 import com.kostovtd.boardy.data.Resource
 import com.kostovtd.boardy.data.ResourceStatus
 import com.kostovtd.boardy.data.models.User
@@ -19,6 +20,7 @@ class SignInPresenter : BasePresenter<SignInView>(), IUserRepositoryListener {
 
     fun signInWithEmailAndPassword(email: String, password: String) {
         view?.let {
+            it.showLoading()
             userRepository.signInWithEmailAndPassword(this, email, password)
         }
     }
@@ -26,12 +28,17 @@ class SignInPresenter : BasePresenter<SignInView>(), IUserRepositoryListener {
 
     override fun handleSignInWithEmailAndPassword(resource: Resource<User>) {
         view?.let {
+            it.hideLoading()
+
             when(resource.status) {
                 ResourceStatus.SUCCESS -> {
-
+                    it.goToMainActivity()
+                    it.finishActivity()
                 }
                 ResourceStatus.ERROR -> {
-
+                    resource.error?.let { errorType ->
+                        it.showError(errorType)
+                    }
                 }
             }
         }
