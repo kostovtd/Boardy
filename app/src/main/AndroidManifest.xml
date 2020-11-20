@@ -11,7 +11,7 @@
         android:theme="@style/Theme.Boardy">
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.kostovtd.boardy.views.activities.SignInActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
