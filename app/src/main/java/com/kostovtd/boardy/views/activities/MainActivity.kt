@@ -4,15 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import com.kostovtd.boardy.R
-import com.kostovtd.boardy.data.ErrorType
+import com.kostovtd.boardy.presenters.MainPresenter
+import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * Created by tosheto on 21.10.20.
  */
-class MainActivity: BaseActivity() {
+class MainActivity : BaseActivity(), MainView {
 
+    private val mainPresenter = MainPresenter()
 
     override fun getLayout(): View = layoutInflater.inflate(R.layout.activity_main, null)
 
@@ -23,13 +24,18 @@ class MainActivity: BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setHomeButtonEnabled(false)
 
-        title = "Main"
+        mainPresenter.attachView(this)
+
+        signout.setOnClickListener {
+            mainPresenter.signOut()
+        }
     }
 
 
-    override fun showError(errorType: ErrorType) {
-        TODO("Not yet implemented")
+    override fun goToSignInActivity() {
+        SignInActivity.newIntent(this)
     }
+
 
     companion object {
 

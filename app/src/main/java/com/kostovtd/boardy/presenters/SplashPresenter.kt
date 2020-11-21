@@ -1,0 +1,26 @@
+package com.kostovtd.boardy.presenters
+
+import com.kostovtd.boardy.data.repositories.UserRepository
+import com.kostovtd.boardy.views.activities.SplashView
+
+/**
+ * Created by tosheto on 22.11.20.
+ */
+class SplashPresenter: BasePresenter<SplashView>() {
+
+    private val userRepository = UserRepository()
+
+
+    fun isSignedIn() {
+        view?.let {
+            if(userRepository.isSignedIn()) {
+                it.goToMainActivity()
+            } else {
+                it.goToSignInActivity()
+            }
+            it.finishActivity()
+        }
+    }
+
+
+}

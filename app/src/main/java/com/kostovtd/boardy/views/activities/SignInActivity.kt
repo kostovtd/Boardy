@@ -1,5 +1,7 @@
 package com.kostovtd.boardy.views.activities
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.kostovtd.boardy.R
@@ -37,5 +39,15 @@ class SignInActivity : BaseActivity(), SignInView {
 
     override fun goToMainActivity() {
         MainActivity.newIntent(this)
+    }
+
+
+    companion object {
+
+        fun newIntent(context: Context) {
+            val intent = Intent(context, SignInActivity::class.java)
+            context.startActivity(intent)
+        }
+
     }
 }

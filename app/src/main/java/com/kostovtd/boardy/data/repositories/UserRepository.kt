@@ -13,6 +13,10 @@ import com.kostovtd.boardy.data.models.User
 class UserRepository {
 
 
+    fun isSignedIn(): Boolean =
+        FirebaseAuth.getInstance().currentUser?.let { true } ?: run { false }
+
+
     fun signUpWithEmailAndPassword(
         listener: IUserRepositoryListener,
         email: String,
@@ -65,7 +69,7 @@ class UserRepository {
                         listener.handleSignInWithEmailAndPassword(data)
                     }
                 } else {
-                    val error = when(it.exception) {
+                    val error = when (it.exception) {
                         is FirebaseAuthInvalidUserException -> ErrorType.WRONG_CREDENTIALS
                         else -> ErrorType.UNKNOWN
                     }
@@ -80,4 +84,7 @@ class UserRepository {
     fun signInWithGoogle() {
         TODO("not yet implemented")
     }
+
+
+    fun signOut() = FirebaseAuth.getInstance().signOut()
 }

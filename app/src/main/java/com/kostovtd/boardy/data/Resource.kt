@@ -18,6 +18,8 @@ data class Resource<out T>(val status: ResourceStatus, val data: T?, val error: 
 
 enum class ErrorType {
     UNKNOWN,
+    EMPTY_EMAIL,
+    EMPTY_PASSWORD,
     WRONG_CREDENTIALS
 }
 

@@ -15,13 +15,19 @@ class SignInPresenter : BasePresenter<SignInView>(), IUserRepositoryListener {
 
     private val userRepository = UserRepository()
 
-    val user: User? = null
-
 
     fun signInWithEmailAndPassword(email: String, password: String) {
         view?.let {
-            it.showLoading()
-            userRepository.signInWithEmailAndPassword(this, email, password)
+            if (isEmailInputValid(email)) {
+                if (isPasswordInputValid(password)) {
+                    it.showLoading()
+                    userRepository.signInWithEmailAndPassword(this, email, password)
+                } else {
+                    it.showError(ErrorType.EMPTY_PASSWORD)
+                }
+            } else {
+                it.showError(ErrorType.EMPTY_EMAIL)
+            }
         }
     }
 
@@ -30,7 +36,7 @@ class SignInPresenter : BasePresenter<SignInView>(), IUserRepositoryListener {
         view?.let {
             it.hideLoading()
 
-            when(resource.status) {
+            when (resource.status) {
                 ResourceStatus.SUCCESS -> {
                     it.goToMainActivity()
                     it.finishActivity()
@@ -43,4 +49,10 @@ class SignInPresenter : BasePresenter<SignInView>(), IUserRepositoryListener {
             }
         }
     }
+
+
+    private fun isEmailInputValid(email: String?): Boolean = !email.isNullOrBlank()
+
+
+    private fun isPasswordInputValid(password: String?): Boolean = !password.isNullOrBlank()
 }
