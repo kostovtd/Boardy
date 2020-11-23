@@ -1,0 +1,33 @@
+name: UI Test Workflow
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - release/*
+      - hotfix/*
+
+jobs:
+  testing:
+    name: Lint Check and Testing
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone Repo
+        uses: actions/checkout@v1
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+#       - name: Build the app
+#         run: ./gradlew build
+
+      - name: Run UITestSuit on Android emulator API 23
+        uses: ReactiveCircus/android-emulator-runner@v2.13.0
+        with:
+          # API level of the platform and system image - e.g. 23 for Android Marshmallow, 29 for Android 10
+          api-level: 23
+          script: ./gradlew app:connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.kostovtd.boardy.tests.ui.UITestSuit

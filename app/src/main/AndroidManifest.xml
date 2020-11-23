@@ -11,9 +11,8 @@
         android:theme="@style/Theme.Boardy">
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.kostovtd.boardy.views.activities.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
@@ -21,6 +20,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name="com.kostovtd.boardy.views.activities.SignInActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/sign_in"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+
+
+        <activity
+            android:name="com.kostovtd.boardy.views.activities.MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/main"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
 
     </application>
 
