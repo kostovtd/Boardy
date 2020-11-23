@@ -25,7 +25,7 @@
         <activity
             android:name="com.kostovtd.boardy.views.activities.SignInActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/sing_in"
+            android:label="@string/sign_in"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
 

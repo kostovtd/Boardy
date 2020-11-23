@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Boardy</string>
-    <string name="sing_in">Sign in</string>
-    <string name="sing_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
     <string name="main">Main</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
