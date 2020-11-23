@@ -1,6 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_gray">
+
+
+        <EditText
+            android:id="@+id/inputEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/email_mandatory"
+            android:inputType="textEmailAddress"
+            app:layout_constraintEnd_toStartOf="@id/endGuideline"
+            app:layout_constraintStart_toEndOf="@id/startGuideline"
+            app:layout_constraintStart_toStartOf="@id/startGuideline"
+            app:layout_constraintTop_toBottomOf="@id/topGuideline" />
+
+
+        <EditText
+            android:id="@+id/inputPassword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="@string/password_mandatory"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toStartOf="@id/endGuideline"
+            app:layout_constraintStart_toEndOf="@id/startGuideline"
+            app:layout_constraintTop_toBottomOf="@id/inputEmail" />
+
+
+        <EditText
+            android:id="@+id/inputConfirmPassword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="@string/confirm_password_mandatory"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toStartOf="@id/endGuideline"
+            app:layout_constraintStart_toEndOf="@id/startGuideline"
+            app:layout_constraintTop_toBottomOf="@id/inputPassword" />
+
+
+        <EditText
+            android:id="@+id/inputUsername"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="@string/user_name_optional"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toStartOf="@id/endGuideline"
+            app:layout_constraintStart_toEndOf="@id/startGuideline"
+            app:layout_constraintTop_toBottomOf="@id/inputConfirmPassword" />
+
+
+        <EditText
+            android:id="@+id/inputFirstName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="@string/first_name_optional"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toStartOf="@id/endGuideline"
+            app:layout_constraintStart_toEndOf="@id/startGuideline"
+            app:layout_constraintTop_toBottomOf="@id/inputUsername" />
+
+
+        <EditText
+            android:id="@+id/inputLastName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="@string/last_name_optional"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toStartOf="@id/endGuideline"
+            app:layout_constraintStart_toEndOf="@id/startGuideline"
+            app:layout_constraintTop_toBottomOf="@id/inputFirstName" />
+
+
+        <Button
+            android:id="@+id/signUp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/sign_up"
+            android:textColor="@color/pickled_bluewood"
+            app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
+            app:layout_constraintEnd_toStartOf="@id/endGuideline"
+            app:layout_constraintStart_toEndOf="@id/startGuideline" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/startGuideline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/endGuideline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/topGuideline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/bottomGuideline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="16dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

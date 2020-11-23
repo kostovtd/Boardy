@@ -4,7 +4,13 @@
     <string name="sign_up">Sign up</string>
     <string name="main">Main</string>
     <string name="email">Email</string>
+    <string name="email_mandatory">Email*</string>
     <string name="password">Password</string>
+    <string name="password_mandatory">Password*</string>
+    <string name="confirm_password_mandatory">Confirm Password*</string>
+    <string name="user_name_optional">Username (optional)</string>
+    <string name="first_name_optional">First Name (optional)</string>
+    <string name="last_name_optional">Last Name (optional)</string>
 
     <!-- ERROR MESSAGES -->
     <string name="something_went_wrong">Someting went wrong. Please, try again!</string>
