@@ -6,4 +6,5 @@ package com.kostovtd.boardy.views.activities
 interface SignInView : BaseView {
 
     fun goToMainActivity()
+    fun goToSignUpActivity()
 }

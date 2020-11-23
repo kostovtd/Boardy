@@ -34,6 +34,8 @@ class SignInActivity : BaseActivity(), SignInView {
 
             signInPresenter.signInWithEmailAndPassword(email, password)
         }
+
+        signUp.setOnClickListener { goToSignUpActivity() }
     }
 
 
@@ -41,6 +43,10 @@ class SignInActivity : BaseActivity(), SignInView {
         MainActivity.newIntent(this)
     }
 
+
+    override fun goToSignUpActivity() {
+        SignUpActivity.newIntent(this)
+    }
 
     companion object {
 
