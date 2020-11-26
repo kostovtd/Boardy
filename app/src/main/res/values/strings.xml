@@ -17,4 +17,8 @@
     <string name="wrong_credentials">Wrong username or password</string>
     <string name="empty_email">Email must not be empty</string>
     <string name="empty_password">Password must not be empty</string>
+    <string name="wrong_email_format">Wrong email format</string>
+    <string name="wrong_password_format">The password must be at least 8 characters long</string>
+    <string name="empty_confirm_password">Confirm password must not be empty</string>
+    <string name="password_mismatch">Passwords do not match</string>
 </resources>
