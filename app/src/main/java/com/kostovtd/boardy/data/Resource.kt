@@ -3,17 +3,7 @@ package com.kostovtd.boardy.data
 /**
  * Created by tosheto on 15.11.20.
  */
-data class Resource<out T>(val status: ResourceStatus, val data: T?, val error: ErrorType? = null) {
-    companion object {
-        fun <T> success(data: T?): Resource<T> {
-            return Resource(ResourceStatus.SUCCESS, data, null)
-        }
-
-        fun <T> error(msg: String, data: T?): Resource<T> {
-            return Resource(ResourceStatus.ERROR, data)
-        }
-    }
-}
+data class Resource<out T>(val status: ResourceStatus, val data: T?, val error: ErrorType? = null)
 
 
 enum class ErrorType {
@@ -24,7 +14,11 @@ enum class ErrorType {
     WRONG_PASSWORD_FORMAT,
     WRONG_CREDENTIALS,
     EMPTY_CONFIRM_PASSWORD,
-    PASSWORDS_MISMATCH
+    PASSWORDS_MISMATCH,
+    FIREBASE_AUTH_WEAK_PASSWORD,
+    FIREBASE_AUTH_INVALID_CREDENTIALS,
+    FIREBASE_AUTH_USER_COLLISION,
+    FIREBASE_AUTH_INVALID_USER
 }
 
 

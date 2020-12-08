@@ -1,17 +1,15 @@
 package com.kostovtd.boardy.presenters
 
 import com.kostovtd.boardy.data.ErrorType
-import com.kostovtd.boardy.data.Resource
 import com.kostovtd.boardy.data.ResourceStatus
-import com.kostovtd.boardy.data.models.User
-import com.kostovtd.boardy.data.repositories.IUserRepositoryListener
 import com.kostovtd.boardy.data.repositories.UserRepository
 import com.kostovtd.boardy.views.activities.SignInView
+import kotlinx.coroutines.async
 
 /**
  * Created by tosheto on 17.11.20.
  */
-class SignInPresenter : BasePresenter<SignInView>(), IUserRepositoryListener {
+class SignInPresenter : BasePresenter<SignInView>() {
 
     private val userRepository = UserRepository()
 
@@ -21,31 +19,29 @@ class SignInPresenter : BasePresenter<SignInView>(), IUserRepositoryListener {
             if (isEmailInputValid(email)) {
                 if (isPasswordInputValid(password)) {
                     it.showLoading()
-                    userRepository.signInWithEmailAndPassword(this, email, password)
+
+                    scopeMainThread.async {
+                        val signInResponse =
+                            userRepository.signInWithEmailAndPassword(email, password)
+                        it.hideLoading()
+
+                        when (signInResponse.status) {
+                            ResourceStatus.SUCCESS -> {
+                                it.goToMainActivity()
+                                it.finishActivity()
+                            }
+                            ResourceStatus.ERROR -> {
+                                signInResponse.error?.let { errorType ->
+                                    it.showError(errorType)
+                                }
+                            }
+                        }
+                    }
                 } else {
                     it.showError(ErrorType.EMPTY_PASSWORD)
                 }
             } else {
                 it.showError(ErrorType.EMPTY_EMAIL)
-            }
-        }
-    }
-
-
-    override fun handleSignInWithEmailAndPassword(resource: Resource<User>) {
-        view?.let {
-            it.hideLoading()
-
-            when (resource.status) {
-                ResourceStatus.SUCCESS -> {
-                    it.goToMainActivity()
-                    it.finishActivity()
-                }
-                ResourceStatus.ERROR -> {
-                    resource.error?.let { errorType ->
-                        it.showError(errorType)
-                    }
-                }
             }
         }
     }

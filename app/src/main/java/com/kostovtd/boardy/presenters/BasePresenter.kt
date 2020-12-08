@@ -2,6 +2,9 @@ package com.kostovtd.boardy.presenters
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 
 /**
  * Created by tosheto on 16.11.20.
@@ -9,6 +12,10 @@ import com.google.gson.reflect.TypeToken
 abstract class BasePresenter<V> {
 
     protected var view: V? = null
+    private var job = Job()
+    protected val scopeMainThread = CoroutineScope(job + Dispatchers.Main)
+    protected val scopeIO = CoroutineScope(job + Dispatchers.IO)
+
 
     fun attachView(view: V) {
         this.view = view
@@ -18,7 +25,10 @@ abstract class BasePresenter<V> {
         view = null
     }
 
-    open fun cancelAllRequests() {}
+    open fun cancelAllRequests() {
+        job.cancel()
+    }
 
-    protected fun <T> parseJson(json: String, typeToken: TypeToken<T>): T = Gson().fromJson<T>(json, typeToken.type)
+    protected fun <T> parseJson(json: String, typeToken: TypeToken<T>): T =
+        Gson().fromJson<T>(json, typeToken.type)
 }

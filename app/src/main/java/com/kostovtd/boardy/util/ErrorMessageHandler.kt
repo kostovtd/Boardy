@@ -25,6 +25,7 @@ class ErrorMessageHandler(
             ErrorType.WRONG_PASSWORD_FORMAT -> context.getString(R.string.wrong_password_format)
             ErrorType.EMPTY_CONFIRM_PASSWORD -> context.getString(R.string.empty_confirm_password)
             ErrorType.PASSWORDS_MISMATCH -> context.getString(R.string.password_mismatch)
+            else -> context.getString(R.string.something_went_wrong)
         }
 
         Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show()

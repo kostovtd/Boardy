@@ -10,16 +10,35 @@
         android:background="@color/light_gray">
 
 
+        <ImageView
+            android:id="@+id/imageEmail"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_email"
+            app:layout_constraintBottom_toBottomOf="@id/inputEmail"
+            app:layout_constraintStart_toEndOf="@id/startGuideline"
+            app:layout_constraintTop_toTopOf="@id/inputEmail" />
+
+
         <EditText
             android:id="@+id/inputEmail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/email_mandatory"
             android:inputType="textEmailAddress"
+            android:layout_marginStart="8dp"
             app:layout_constraintEnd_toStartOf="@id/endGuideline"
-            app:layout_constraintStart_toEndOf="@id/startGuideline"
-            app:layout_constraintStart_toStartOf="@id/startGuideline"
+            app:layout_constraintStart_toEndOf="@id/imageEmail"
             app:layout_constraintTop_toBottomOf="@id/topGuideline" />
+
+        <ImageView
+            android:id="@+id/imagePassword"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_password"
+            app:layout_constraintBottom_toBottomOf="@id/inputPassword"
+            app:layout_constraintStart_toEndOf="@id/startGuideline"
+            app:layout_constraintTop_toTopOf="@id/inputPassword" />
 
 
         <EditText
@@ -27,10 +46,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:layout_marginStart="8dp"
             android:hint="@string/password_mandatory"
             android:inputType="textPassword"
             app:layout_constraintEnd_toStartOf="@id/endGuideline"
-            app:layout_constraintStart_toEndOf="@id/startGuideline"
+            app:layout_constraintStart_toEndOf="@id/imagePassword"
             app:layout_constraintTop_toBottomOf="@id/inputEmail" />
 
 
@@ -42,44 +62,8 @@
             android:hint="@string/confirm_password_mandatory"
             android:inputType="textPassword"
             app:layout_constraintEnd_toStartOf="@id/endGuideline"
-            app:layout_constraintStart_toEndOf="@id/startGuideline"
+            app:layout_constraintStart_toStartOf="@id/inputPassword"
             app:layout_constraintTop_toBottomOf="@id/inputPassword" />
-
-
-        <EditText
-            android:id="@+id/inputUsername"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:hint="@string/user_name_optional"
-            android:inputType="textPassword"
-            app:layout_constraintEnd_toStartOf="@id/endGuideline"
-            app:layout_constraintStart_toEndOf="@id/startGuideline"
-            app:layout_constraintTop_toBottomOf="@id/inputConfirmPassword" />
-
-
-        <EditText
-            android:id="@+id/inputFirstName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:hint="@string/first_name_optional"
-            android:inputType="textPassword"
-            app:layout_constraintEnd_toStartOf="@id/endGuideline"
-            app:layout_constraintStart_toEndOf="@id/startGuideline"
-            app:layout_constraintTop_toBottomOf="@id/inputUsername" />
-
-
-        <EditText
-            android:id="@+id/inputLastName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:hint="@string/last_name_optional"
-            android:inputType="textPassword"
-            app:layout_constraintEnd_toStartOf="@id/endGuideline"
-            app:layout_constraintStart_toEndOf="@id/startGuideline"
-            app:layout_constraintTop_toBottomOf="@id/inputFirstName" />
 
 
         <Button

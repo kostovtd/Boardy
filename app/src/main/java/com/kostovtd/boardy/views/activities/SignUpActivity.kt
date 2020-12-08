@@ -27,16 +27,22 @@ class SignUpActivity : BaseActivity(), SignUpView {
             val email = inputEmail.text.toString()
             val password = inputPassword.text.toString()
             val confirmPassword = inputConfirmPassword.text.toString()
-            val userName = inputUsername.text.toString()
-            val firstName = inputFirstName.text.toString()
-            val lastName = inputLastName.text.toString()
 
-            presenter.signUpWithEmailAndPassword(
-                email, password, confirmPassword,
-                userName, firstName, lastName
-            )
+            presenter.signUpWithEmailAndPassword(email, password, confirmPassword)
         }
     }
+
+
+    override fun onPause() {
+        super.onPause()
+        presenter.cancelAllRequests()
+    }
+
+
+    override fun goToMainActivity() {
+        MainActivity.newIntent(this, true)
+    }
+
 
     companion object {
 

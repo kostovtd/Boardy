@@ -39,6 +39,12 @@ class SignInActivity : BaseActivity(), SignInView {
     }
 
 
+    override fun onPause() {
+        super.onPause()
+        signInPresenter.cancelAllRequests()
+    }
+
+
     override fun goToMainActivity() {
         MainActivity.newIntent(this)
     }
