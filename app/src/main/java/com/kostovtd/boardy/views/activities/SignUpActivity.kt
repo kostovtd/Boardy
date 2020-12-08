@@ -44,6 +44,20 @@ class SignUpActivity : BaseActivity(), SignUpView {
     }
 
 
+    override fun disableAllViews() {
+        inputEmail.isEnabled = false
+        inputPassword.isEnabled = false
+        inputConfirmPassword.isEnabled = false
+    }
+
+
+    override fun enableAllViews() {
+        inputEmail.isEnabled = true
+        inputPassword.isEnabled = true
+        inputConfirmPassword.isEnabled = true
+    }
+
+
     companion object {
 
         fun newIntent(context: Context) {

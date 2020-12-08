@@ -25,6 +25,8 @@ class ErrorMessageHandler(
             ErrorType.WRONG_PASSWORD_FORMAT -> context.getString(R.string.wrong_password_format)
             ErrorType.EMPTY_CONFIRM_PASSWORD -> context.getString(R.string.empty_confirm_password)
             ErrorType.PASSWORDS_MISMATCH -> context.getString(R.string.password_mismatch)
+            ErrorType.FIREBASE_AUTH_WEAK_PASSWORD -> context.getString(R.string.weak_password)
+            ErrorType.FIREBASE_AUTH_USER_COLLISION -> context.getString(R.string.email_is_already_in_use)
             else -> context.getString(R.string.something_went_wrong)
         }
 

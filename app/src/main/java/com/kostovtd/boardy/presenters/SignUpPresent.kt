@@ -48,9 +48,12 @@ class SignUpPresent : BasePresenter<SignUpView>() {
                 return
             }
 
-            scopeIO.async {
+            scopeIO.launch {
 
-                scopeMainThread.launch { it.showLoading() }
+                scopeMainThread.launch {
+                    it.showLoading()
+                    it.disableAllViews()
+                }
 
                 val signUpResponse =
                     repository.signUpWithEmailAndPassword(email ?: "", password ?: "")
@@ -60,13 +63,14 @@ class SignUpPresent : BasePresenter<SignUpView>() {
                         val signInResponse =
                             repository.signInWithEmailAndPassword(email ?: "", password ?: "")
 
-                        if (signInResponse.status == ResourceStatus.SUCCESS) {
-                            scopeMainThread.launch {
-                                it.hideLoading()
+                        scopeMainThread.launch {
+                            it.hideLoading()
+                            it.enableAllViews()
+
+                            if (signInResponse.status == ResourceStatus.SUCCESS) {
                                 it.goToMainActivity()
-                            }
-                        } else {
-                            scopeMainThread.launch {
+                                it.finishActivity()
+                            } else {
                                 signInResponse.error?.let { errorType ->
                                     it.showError(errorType)
                                 }
@@ -76,6 +80,8 @@ class SignUpPresent : BasePresenter<SignUpView>() {
                     ResourceStatus.ERROR -> {
                         scopeMainThread.launch {
                             it.hideLoading()
+                            it.enableAllViews()
+
                             signUpResponse.error?.let { errorType ->
                                 it.showError(errorType)
                             }

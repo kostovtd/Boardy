@@ -11,5 +11,7 @@ interface BaseView {
     fun hideLoading() {}
     fun showError(errorType: ErrorType) {}
     fun finishActivity() {}
+    fun disableAllViews() {}
+    fun enableAllViews() {}
 
 }

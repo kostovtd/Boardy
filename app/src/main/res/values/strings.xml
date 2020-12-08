@@ -21,4 +21,6 @@
     <string name="wrong_password_format">The password must be at least 8 characters long</string>
     <string name="empty_confirm_password">Confirm password must not be empty</string>
     <string name="password_mismatch">Passwords do not match</string>
+    <string name="weak_password">Your password is too weak</string>
+    <string name="email_is_already_in_use">The email is already in use</string>
 </resources>
