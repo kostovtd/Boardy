@@ -1,12 +1,17 @@
 package com.kostovtd.boardy.utils
 
 import android.content.Context
+import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.not
 
 /**
  * Created by tosheto on 22.11.20.
@@ -54,7 +59,23 @@ fun ViewInteraction.withTextSize(textSize: Float): ViewInteraction =
 fun ViewInteraction.withTextStyle(textStyle: Int): ViewInteraction =
     this.check(matches(TextViewMatchers.withTextStyle(textStyle)))
 
+fun ViewInteraction.withDrawableResource(@DrawableRes iconDrawableId: Int) =
+    this.check(matches(withDrawable(iconDrawableId)))
+
+fun ViewInteraction.withHintResource(resourceId: Int): ViewInteraction =
+    this.check(matches(withHint(resourceId)))
+
+fun ViewInteraction.isEnabled(): ViewInteraction =
+    this.check(matches(ViewMatchers.isEnabled()))
+
+fun ViewInteraction.isDisabled(): ViewInteraction =
+    this.check(matches(not(ViewMatchers.isEnabled())))
+
 fun stringResource(id: Int): String {
     val targetContext: Context = InstrumentationRegistry.getInstrumentation().targetContext
     return targetContext.resources.getString(id)
+}
+
+private fun withDrawable(resourceId: Int): Matcher<View> {
+    return DrawableMatcher(resourceId) as Matcher<View>
 }

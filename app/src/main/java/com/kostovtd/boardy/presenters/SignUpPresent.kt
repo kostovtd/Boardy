@@ -1,5 +1,6 @@
 package com.kostovtd.boardy.presenters
 
+import android.util.Log
 import androidx.core.util.PatternsCompat
 import com.kostovtd.boardy.data.ErrorType
 import com.kostovtd.boardy.data.ResourceStatus

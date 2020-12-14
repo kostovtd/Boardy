@@ -10,7 +10,7 @@ import kotlinx.coroutines.tasks.await
 /**
  * Created by tosheto on 14.11.20.
  */
-class UserRepository {
+open class UserRepository {
 
     fun isSignedIn(): Boolean =
         FirebaseAuth.getInstance().currentUser?.let { true } ?: run { false }
