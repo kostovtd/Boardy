@@ -8,5 +8,6 @@ import org.junit.runners.Suite
  */
 @RunWith(Suite::class)
 @Suite.SuiteClasses(
-    SignInUITests::class)
+    SignInUITests::class,
+    SignUpUITests::class)
 class UITestSuit

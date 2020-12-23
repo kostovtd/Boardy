@@ -1,6 +1,7 @@
 package com.kostovtd.boardy.presenters
 
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.core.util.PatternsCompat
 import com.kostovtd.boardy.data.ErrorType
 import com.kostovtd.boardy.data.ResourceStatus
@@ -94,20 +95,26 @@ class SignUpPresent : BasePresenter<SignUpView>() {
     }
 
 
-    private fun isEmailEmpty(email: CharSequence?): Boolean = email.isNullOrBlank()
+    @VisibleForTesting
+    fun isEmailEmpty(email: CharSequence?): Boolean = email.isNullOrBlank()
 
-    private fun isEmailFormatValid(email: CharSequence?): Boolean =
+    @VisibleForTesting
+    fun isEmailFormatValid(email: CharSequence?): Boolean =
         email?.let { PatternsCompat.EMAIL_ADDRESS.matcher(it).matches() } ?: run { false }
 
-    private fun isPasswordEmpty(password: String?): Boolean = password.isNullOrBlank()
+    @VisibleForTesting
+    fun isPasswordEmpty(password: String?): Boolean = password.isNullOrBlank()
 
-    private fun isPasswordFormatValid(password: String?): Boolean =
+    @VisibleForTesting
+    fun isPasswordFormatValid(password: String?): Boolean =
         password?.let { it.length >= 8 } ?: run { false }
 
-    private fun isConfirmPasswordEmpty(confirmPassword: String?): Boolean =
+    @VisibleForTesting
+    fun isConfirmPasswordEmpty(confirmPassword: String?): Boolean =
         confirmPassword.isNullOrBlank()
 
-    private fun isConfirmPasswordSameAsPassword(
+    @VisibleForTesting
+    fun isConfirmPasswordSameAsPassword(
         confirmPassword: String?,
         password: String?
     ): Boolean = confirmPassword == password
