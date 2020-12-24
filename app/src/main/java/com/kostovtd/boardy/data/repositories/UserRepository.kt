@@ -1,46 +1,34 @@
 package com.kostovtd.boardy.data.repositories
 
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.*
 import com.kostovtd.boardy.data.ErrorType
 import com.kostovtd.boardy.data.Resource
 import com.kostovtd.boardy.data.ResourceStatus
 import com.kostovtd.boardy.data.models.User
+import kotlinx.coroutines.tasks.await
 
 /**
  * Created by tosheto on 14.11.20.
  */
-class UserRepository {
-
+open class UserRepository {
 
     fun isSignedIn(): Boolean =
         FirebaseAuth.getInstance().currentUser?.let { true } ?: run { false }
 
 
-    fun signUpWithEmailAndPassword(
-        listener: IUserRepositoryListener,
-        email: String,
-        password: String
-    ) {
-        val firebaseAuth = FirebaseAuth.getInstance()
-
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val firebaseUser = firebaseAuth.currentUser
-                    firebaseUser?.let { firebaseUser ->
-                        val user = User(
-                            firebaseUser.displayName ?: "",
-                            firebaseUser.email ?: ""
-                        )
-//                        val data = Resource(ResourceStatus.SUCCESS, user, "")
-//                        listener.handleSignInWithEmailAndPassword(data)
-                    }
-                } else {
-//                    val data = Resource(ResourceStatus.ERROR, null, message = "")
-//                    listener.handleSignInWithEmailAndPassword(data)
-                }
-            }
+    suspend fun signUpWithEmailAndPassword(email: String, password: String): Resource<User> {
+        return try {
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).await()
+            Resource(ResourceStatus.SUCCESS, null)
+        } catch (weakPasswordException: FirebaseAuthWeakPasswordException) {
+            Resource(ResourceStatus.ERROR, null, ErrorType.FIREBASE_AUTH_WEAK_PASSWORD)
+        } catch (invalidCredentialsException: FirebaseAuthInvalidCredentialsException) {
+            Resource(ResourceStatus.ERROR, null, ErrorType.FIREBASE_AUTH_INVALID_CREDENTIALS)
+        } catch (userCollisionException: FirebaseAuthUserCollisionException) {
+            Resource(ResourceStatus.ERROR, null, ErrorType.FIREBASE_AUTH_USER_COLLISION)
+        } catch (e: Exception) {
+            Resource(ResourceStatus.ERROR, null, ErrorType.UNKNOWN)
+        }
     }
 
 
@@ -49,35 +37,23 @@ class UserRepository {
     }
 
 
-    fun signInWithEmailAndPassword(
-        listener: IUserRepositoryListener,
-        email: String,
-        password: String
-    ) {
-        val firebaseAuth = FirebaseAuth.getInstance()
-
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val firebaseUser = firebaseAuth.currentUser
-                    firebaseUser?.let { firebaseUser ->
-                        val user = User(
-                            firebaseUser.displayName ?: "",
-                            firebaseUser.email ?: ""
-                        )
-                        val data = Resource(ResourceStatus.SUCCESS, user)
-                        listener.handleSignInWithEmailAndPassword(data)
-                    }
-                } else {
-                    val error = when (it.exception) {
-                        is FirebaseAuthInvalidUserException -> ErrorType.WRONG_CREDENTIALS
-                        else -> ErrorType.UNKNOWN
-                    }
-
-                    val data = Resource(ResourceStatus.ERROR, null, error)
-                    listener.handleSignInWithEmailAndPassword(data)
-                }
+    suspend fun signInWithEmailAndPassword(email: String, password: String): Resource<User> {
+        return try {
+            val authResult =
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
+            authResult.user?.let {
+                val user = User(it.displayName ?: "", it.email ?: "")
+                Resource(ResourceStatus.SUCCESS, user)
+            } ?: run {
+                Resource(ResourceStatus.ERROR, null, ErrorType.UNKNOWN)
             }
+        } catch (invalidUserException: FirebaseAuthInvalidUserException) {
+            Resource(ResourceStatus.ERROR, null, ErrorType.FIREBASE_AUTH_INVALID_USER)
+        } catch (invalidCredentialsException: FirebaseAuthInvalidCredentialsException) {
+            Resource(ResourceStatus.ERROR, null, ErrorType.FIREBASE_AUTH_INVALID_CREDENTIALS)
+        } catch (e: Exception) {
+            Resource(ResourceStatus.ERROR, null, ErrorType.UNKNOWN)
+        }
     }
 
 

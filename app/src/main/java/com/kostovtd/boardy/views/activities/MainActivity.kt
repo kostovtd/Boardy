@@ -39,8 +39,13 @@ class MainActivity : BaseActivity(), MainView {
 
     companion object {
 
-        fun newIntent(context: Context) {
+        fun newIntent(context: Context, clearBackStack: Boolean = false) {
             val intent = Intent(context, MainActivity::class.java)
+
+            if(clearBackStack) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+
             context.startActivity(intent)
         }
 
