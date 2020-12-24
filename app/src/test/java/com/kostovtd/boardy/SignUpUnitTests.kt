@@ -25,7 +25,7 @@ class SignUpUnitTests {
 
     @Test
     fun testIsEmailEmptyWithValidInput() {
-        assert(presenter.isEmailEmpty(""))
+        assert(presenter.isEmailEmpty("1"))
         assert(presenter.isEmailEmpty("  "))
     }
 
