@@ -1,10 +1,10 @@
 package com.kostovtd.boardy.data.repositories
 
 import com.google.firebase.auth.*
-import com.kostovtd.boardy.data.ErrorType
-import com.kostovtd.boardy.data.Resource
-import com.kostovtd.boardy.data.ResourceStatus
 import com.kostovtd.boardy.data.models.User
+import com.kostovtd.shared.ErrorType
+import com.kostovtd.shared.Resource
+import com.kostovtd.shared.ResourceStatus
 import kotlinx.coroutines.tasks.await
 
 /**

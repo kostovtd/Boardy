@@ -1,3 +1,4 @@
+include ':HeroRealms'
 include ':shared'
 include ':app'
 rootProject.name = "Boardy"
