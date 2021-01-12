@@ -1,10 +1,12 @@
 package com.kostovtd.herorealms.views.activities
 
+import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.splitcompat.SplitCompat
 import com.kostovtd.herorealms.R
 import com.kostovtd.shared.ErrorType
 import com.kostovtd.shared.util.ErrorMessageHandler
@@ -27,10 +29,14 @@ class HeroRealmsActivity: AppCompatActivity(), HeroRealmsView {
         errorMessageHandler = ErrorMessageHandler(this, baseRootContainer)
 
         finishHeroRealms.setOnClickListener {
-            Snackbar.make(baseRootContainer, "Click", Snackbar.LENGTH_LONG).show()
+            finish()
         }
     }
 
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(newBase)
+        SplitCompat.install(this)
+    }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         item?.let {
