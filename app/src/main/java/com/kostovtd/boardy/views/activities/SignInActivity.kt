@@ -8,6 +8,7 @@ import com.kostovtd.boardy.R
 import com.kostovtd.boardy.presenters.SignInPresenter
 import kotlinx.android.synthetic.main.activity_sign_in.*
 
+
 /**
  * Created by tosheto on 14.11.20.
  */
@@ -35,7 +36,9 @@ class SignInActivity : BaseActivity(), SignInView {
             signInPresenter.signInWithEmailAndPassword(email, password)
         }
 
-        signUp.setOnClickListener { goToSignUpActivity() }
+        signUp.setOnClickListener {
+            goToSignUpActivity()
+        }
     }
 
 
@@ -62,4 +65,32 @@ class SignInActivity : BaseActivity(), SignInView {
         }
 
     }
+
+
+//    val request = SplitInstallRequest.newBuilder()
+//        .addModule("HeroRealms")
+//        .build()
+//    val manager = SplitInstallManagerFactory.create(this)
+//
+//    manager.startInstall(request)
+//
+//    manager.registerListener {
+//        when (it.status()) {
+//            SplitInstallSessionStatus.DOWNLOADING -> Snackbar.make(
+//                baseRootContainer,
+//                "Downloading",
+//                Snackbar.LENGTH_LONG
+//            ).show()
+//            SplitInstallSessionStatus.INSTALLED -> {
+//                val intent = Intent()
+//                intent.setClassName(
+//                    BuildConfig.APPLICATION_ID,
+//                    "com.kostovtd.herorealms.views.activities.HeroRealmsActivity"
+//                )
+//                startActivity(intent)
+//            }
+//            else -> {
+//            }
+//        }
+//    }
 }

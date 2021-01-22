@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import com.kostovtd.boardy.R
-import com.kostovtd.boardy.data.ErrorType
+import com.kostovtd.boardy.data.repositories.ErrorType
 
 /**
  * Created by tosheto on 20.11.20.

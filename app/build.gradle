@@ -14,7 +14,7 @@ android {
         applicationId "com.kostovtd.boardy"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 1
+        versionCode 7
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -24,6 +24,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable = false
         }
     }
 
@@ -45,29 +46,30 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    dynamicFeatures = [':HeroRealms']
 }
 
 dependencies {
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:25.12.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-auth-ktx'
+    api platform('com.google.firebase:firebase-bom:25.12.0')
+    api 'com.google.firebase:firebase-analytics-ktx'
+    api 'com.google.firebase:firebase-crashlytics'
+    api 'com.google.firebase:firebase-auth-ktx'
 
     // Retrofit + OkHttp
-    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
-    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
+    api 'com.squareup.retrofit2:retrofit:2.6.2'
+    api 'com.squareup.retrofit2:converter-gson:2.1.0'
+    api 'com.squareup.okhttp3:logging-interceptor:4.2.1'
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.10"
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4'
+    api "org.jetbrains.kotlin:kotlin-stdlib:1.4.10"
+    api 'androidx.core:core-ktx:1.3.2'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4'
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
+    api 'androidx.appcompat:appcompat:1.2.0'
+    api 'com.google.android.material:material:1.2.1'
 
     // Tests
     testImplementation 'junit:junit:4.13.1'
@@ -86,5 +88,6 @@ dependencies {
     androidTestImplementation 'androidx.test:core:1.3.0'
     androidTestImplementation 'androidx.test.ext:truth:1.3.0'
 
-    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
+    api "androidx.constraintlayout:constraintlayout:2.0.4"
+    api 'com.google.android.play:core:1.9.0'
 }

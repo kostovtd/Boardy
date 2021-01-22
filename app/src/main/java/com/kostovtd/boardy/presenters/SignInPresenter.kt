@@ -1,9 +1,9 @@
 package com.kostovtd.boardy.presenters
 
-import com.kostovtd.boardy.data.ErrorType
-import com.kostovtd.boardy.data.ResourceStatus
 import com.kostovtd.boardy.data.repositories.UserRepository
 import com.kostovtd.boardy.views.activities.SignInView
+import com.kostovtd.boardy.data.repositories.ErrorType
+import com.kostovtd.boardy.data.repositories.ResourceStatus
 import kotlinx.coroutines.async
 
 /**

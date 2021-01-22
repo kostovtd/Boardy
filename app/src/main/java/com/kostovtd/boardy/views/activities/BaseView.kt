@@ -1,6 +1,7 @@
 package com.kostovtd.boardy.views.activities
 
-import com.kostovtd.boardy.data.ErrorType
+import com.kostovtd.boardy.data.repositories.ErrorType
+
 
 /**
  * Created by tosheto on 17.11.20.
