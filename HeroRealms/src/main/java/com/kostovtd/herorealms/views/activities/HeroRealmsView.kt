@@ -1,6 +1,6 @@
 package com.kostovtd.herorealms.views.activities
 
-import com.kostovtd.shared.ErrorType
+import com.kostovtd.boardy.data.repositories.ErrorType
 
 /**
  * Created by tosheto on 25.12.20.

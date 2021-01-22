@@ -1,6 +1,6 @@
 package com.kostovtd.boardy.views.activities
 
-import com.kostovtd.shared.ErrorType
+import com.kostovtd.boardy.data.repositories.ErrorType
 
 
 /**

@@ -1,4 +1,4 @@
-package com.kostovtd.shared
+package com.kostovtd.boardy.data.repositories
 
 /**
  * Created by tosheto on 15.11.20.

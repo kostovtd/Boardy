@@ -6,8 +6,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import com.kostovtd.boardy.R
-import com.kostovtd.shared.ErrorType
-import com.kostovtd.shared.util.ErrorMessageHandler
+import com.kostovtd.boardy.data.repositories.ErrorType
+import com.kostovtd.boardy.util.ErrorMessageHandler
 import kotlinx.android.synthetic.main.activity_base.*
 
 /**

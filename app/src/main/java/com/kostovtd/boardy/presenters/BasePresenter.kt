@@ -1,4 +1,4 @@
-package com.kostovtd.shared.presenters
+package com.kostovtd.boardy.presenters
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

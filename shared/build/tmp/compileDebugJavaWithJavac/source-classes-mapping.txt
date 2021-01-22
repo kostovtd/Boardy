@@ -1,2 +1,0 @@
-com/kostovtd/shared/BuildConfig.java
- com.kostovtd.shared.BuildConfig

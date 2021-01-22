@@ -1,4 +1,4 @@
-package com.kostovtd.shared.util
+package com.kostovtd.boardy.util
 
 import android.graphics.Bitmap
 import android.graphics.Canvas

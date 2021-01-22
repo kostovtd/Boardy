@@ -5,11 +5,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.splitcompat.SplitCompat
 import com.kostovtd.herorealms.R
-import com.kostovtd.shared.ErrorType
-import com.kostovtd.shared.util.ErrorMessageHandler
+import com.kostovtd.boardy.data.repositories.ErrorType
+import com.kostovtd.boardy.util.ErrorMessageHandler
 import kotlinx.android.synthetic.main.activity_hero_realms.*
 
 
@@ -23,12 +22,12 @@ class HeroRealmsActivity: AppCompatActivity(), HeroRealmsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hero_realms)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(toolbar1)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         errorMessageHandler = ErrorMessageHandler(this, baseRootContainer)
 
-        finishHeroRealms.setOnClickListener {
+        finishHeroRealms1.setOnClickListener {
             finish()
         }
     }
@@ -50,12 +49,12 @@ class HeroRealmsActivity: AppCompatActivity(), HeroRealmsView {
 
 
     override fun showLoading() {
-        progressBarContainer.visibility = View.VISIBLE
+        progressBarContainer1.visibility = View.VISIBLE
     }
 
 
     override fun hideLoading() {
-        progressBarContainer.visibility = View.GONE
+        progressBarContainer1.visibility = View.GONE
     }
 
 
