@@ -1,7 +1,9 @@
 package com.kostovtd.boardy.views.activities
 
 import android.content.Context
-import com.kostovtd.boardy.data.repositories.ErrorType
+import com.kostovtd.boardy.util.ErrorType
+import com.kostovtd.boardy.util.InfoType
+import com.kostovtd.boardy.util.SuccessType
 
 
 /**
@@ -12,6 +14,8 @@ interface BaseView {
     fun showLoading() {}
     fun hideLoading() {}
     fun showError(errorType: ErrorType) {}
+    fun showSuccess(successType: SuccessType) {}
+    fun showInfo(infoType: InfoType) {}
     fun finishActivity() {}
     fun disableAllViews() {}
     fun enableAllViews() {}

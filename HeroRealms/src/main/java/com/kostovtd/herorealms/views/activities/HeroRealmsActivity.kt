@@ -6,9 +6,9 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.play.core.splitcompat.SplitCompat
+import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.herorealms.R
-import com.kostovtd.boardy.data.repositories.ErrorType
-import com.kostovtd.boardy.util.ErrorMessageHandler
+import com.kostovtd.boardy.util.MessageHandler
 import kotlinx.android.synthetic.main.activity_hero_realms.*
 
 
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_hero_realms.*
  */
 class HeroRealmsActivity: AppCompatActivity(), HeroRealmsView {
 
-    private lateinit var errorMessageHandler: ErrorMessageHandler
+    private lateinit var messageHandler: MessageHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +25,7 @@ class HeroRealmsActivity: AppCompatActivity(), HeroRealmsView {
         setSupportActionBar(toolbar1)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        errorMessageHandler = ErrorMessageHandler(this, baseRootContainer)
+        messageHandler = MessageHandler(this, baseRootContainer)
 
         finishHeroRealms1.setOnClickListener {
             finish()
@@ -64,6 +64,6 @@ class HeroRealmsActivity: AppCompatActivity(), HeroRealmsView {
 
 
     override fun showError(errorType: ErrorType) {
-        errorMessageHandler.showErrorSnackbar(errorType)
+        messageHandler.showErrorSnackbar(errorType)
     }
 }

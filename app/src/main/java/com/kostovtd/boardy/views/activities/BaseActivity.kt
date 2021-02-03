@@ -7,8 +7,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import com.kostovtd.boardy.R
-import com.kostovtd.boardy.data.repositories.ErrorType
-import com.kostovtd.boardy.util.ErrorMessageHandler
+import com.kostovtd.boardy.util.ErrorType
+import com.kostovtd.boardy.util.InfoType
+import com.kostovtd.boardy.util.MessageHandler
+import com.kostovtd.boardy.util.SuccessType
 import kotlinx.android.synthetic.main.activity_base.*
 
 /**
@@ -16,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_base.*
  */
 abstract class BaseActivity : AppCompatActivity(), BaseView {
 
-    private lateinit var errorMessageHandler: ErrorMessageHandler
+    private lateinit var messageHandler: MessageHandler
 
 
     protected abstract fun getLayout(): View
@@ -29,7 +31,7 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setContentLayout()
 
-        errorMessageHandler = ErrorMessageHandler(this, baseRootContainer)
+        messageHandler = MessageHandler(this, baseRootContainer)
     }
 
 
@@ -60,9 +62,17 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 
 
     override fun showError(errorType: ErrorType) {
-        errorMessageHandler.showErrorSnackbar(errorType)
+        messageHandler.showErrorSnackbar(errorType)
     }
 
+
+    override fun showSuccess(successType: SuccessType) {
+        messageHandler.showSuccessScankbar(successType)
+    }
+
+    override fun showInfo(infoType: InfoType) {
+        messageHandler.showInfoScankbar(infoType)
+    }
 
     override fun getContext(): Context = this
 
@@ -78,9 +88,24 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
     private fun setBaseRootContainerConstraintsToView(view: View) {
         val constraintSet = ConstraintSet()
         constraintSet.connect(view.id, ConstraintSet.TOP, toolbar.id, ConstraintSet.BOTTOM)
-        constraintSet.connect(view.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-        constraintSet.connect(view.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        constraintSet.connect(view.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        constraintSet.connect(
+            view.id,
+            ConstraintSet.BOTTOM,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.BOTTOM
+        )
+        constraintSet.connect(
+            view.id,
+            ConstraintSet.START,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.START
+        )
+        constraintSet.connect(
+            view.id,
+            ConstraintSet.END,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.END
+        )
         baseRootContainer.setConstraintSet(constraintSet)
     }
 

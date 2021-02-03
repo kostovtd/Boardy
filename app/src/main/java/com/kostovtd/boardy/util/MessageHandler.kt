@@ -4,12 +4,12 @@ import android.content.Context
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import com.kostovtd.boardy.R
-import com.kostovtd.boardy.data.repositories.ErrorType
+
 
 /**
  * Created by tosheto on 20.11.20.
  */
-class ErrorMessageHandler(
+class MessageHandler(
     private val context: Context,
     private val view: View
 ) {
@@ -32,5 +32,52 @@ class ErrorMessageHandler(
 
         Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show()
     }
+
+
+    fun showInfoScankbar(infoType: InfoType) {
+        val infoMessage = when(infoType) {
+            else -> {
+                ""
+            }
+        }
+
+        Snackbar.make(view, infoMessage, Snackbar.LENGTH_LONG).show()
+    }
+
+
+    fun showSuccessScankbar(successType: SuccessType) {
+        val successMessage = when(successType) {
+            else -> {
+                ""
+            }
+        }
+
+        Snackbar.make(view, successMessage, Snackbar.LENGTH_LONG).show()
+    }
+}
+
+
+enum class ErrorType {
+    UNKNOWN,
+    EMPTY_EMAIL,
+    WRONG_EMAIL_FORMAT,
+    EMPTY_PASSWORD,
+    WRONG_PASSWORD_FORMAT,
+    WRONG_CREDENTIALS,
+    EMPTY_CONFIRM_PASSWORD,
+    PASSWORDS_MISMATCH,
+    FIREBASE_AUTH_WEAK_PASSWORD,
+    FIREBASE_AUTH_INVALID_CREDENTIALS,
+    FIREBASE_AUTH_USER_COLLISION,
+    FIREBASE_AUTH_INVALID_USER
+}
+
+
+enum class InfoType {
+
+}
+
+
+enum class SuccessType {
 
 }

@@ -2,6 +2,7 @@ package com.kostovtd.boardy.data.repositories
 
 import com.google.firebase.auth.*
 import com.kostovtd.boardy.data.models.User
+import com.kostovtd.boardy.util.ErrorType
 import kotlinx.coroutines.tasks.await
 
 /**

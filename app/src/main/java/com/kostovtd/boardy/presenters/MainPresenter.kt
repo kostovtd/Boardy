@@ -2,11 +2,11 @@ package com.kostovtd.boardy.presenters
 
 import com.kostovtd.boardy.data.models.BoardGame
 import com.kostovtd.boardy.data.repositories.BoardGamesRepository
-import com.kostovtd.boardy.data.repositories.ErrorType
 import com.kostovtd.boardy.data.repositories.ResourceStatus
 import com.kostovtd.boardy.data.repositories.UserRepository
 import com.kostovtd.boardy.util.DynamicModuleHandler
 import com.kostovtd.boardy.util.DynamicModuleListener
+import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.views.activities.MainView
 import kotlinx.coroutines.launch
 
