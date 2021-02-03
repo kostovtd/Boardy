@@ -6,7 +6,9 @@ package com.kostovtd.boardy.data.models
 class BoardGame(
     var id: String = "",
     val name: String = "",
-    val nameDynamicFeature: String = "",
+    val moduleName: String = "",
+    val packageName: String = "",
+    val activityName: String = "",
     val designers: ArrayList<String> = ArrayList(),
     val artists: ArrayList<String> = ArrayList(),
     val publishers: ArrayList<String> = ArrayList(),

@@ -29,6 +29,18 @@ class MainActivity : BaseActivity(), MainView {
         signout.setOnClickListener {
             mainPresenter.signOut()
         }
+
+        findGame.setOnClickListener {
+            mainPresenter.findBoardGames()
+        }
+
+        startGame.setOnClickListener {
+            mainPresenter.startGame()
+        }
+
+        downloadGame.setOnClickListener {
+            mainPresenter.downloadAndInstallGame()
+        }
     }
 
 
@@ -36,6 +48,15 @@ class MainActivity : BaseActivity(), MainView {
         SignInActivity.newIntent(this)
     }
 
+
+    override fun enableStartGame() {
+        startGame.isEnabled = true
+    }
+
+
+    override fun enableDownloadGame() {
+        downloadGame.isEnabled = true
+    }
 
     companion object {
 

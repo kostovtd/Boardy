@@ -5,4 +5,6 @@ package com.kostovtd.boardy.views.activities
  */
 interface MainView : BaseView {
     fun goToSignInActivity()
+    fun enableStartGame()
+    fun enableDownloadGame()
 }

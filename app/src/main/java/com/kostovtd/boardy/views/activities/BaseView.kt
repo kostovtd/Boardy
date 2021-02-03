@@ -1,5 +1,6 @@
 package com.kostovtd.boardy.views.activities
 
+import android.content.Context
 import com.kostovtd.boardy.data.repositories.ErrorType
 
 
@@ -14,5 +15,6 @@ interface BaseView {
     fun finishActivity() {}
     fun disableAllViews() {}
     fun enableAllViews() {}
+    fun getContext(): Context
 
 }

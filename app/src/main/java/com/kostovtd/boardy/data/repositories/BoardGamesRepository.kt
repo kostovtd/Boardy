@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.kostovtd.boardy.data.models.BoardGame
+import com.kostovtd.boardy.util.Constants
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
@@ -16,10 +17,10 @@ class BoardGamesRepository {
 
 
     suspend fun findGamesByName(name: String): Resource<ArrayList<BoardGame>> {
-        val boardGamesCollection = firestore.collection("boardGames")
+        val boardGamesCollection = firestore.collection(Constants.BOARDGAMES_COLLECTION_PATH)
 
-        val query = boardGamesCollection.whereGreaterThanOrEqualTo("name", name)
-            .whereLessThanOrEqualTo("name", name + '\uf8ff')
+        val query = boardGamesCollection.whereGreaterThanOrEqualTo(Constants.NAME_FIELD, name)
+            .whereLessThanOrEqualTo(Constants.NAME_FIELD, name + '\uf8ff')
 
         val results = ArrayList<BoardGame>()
 
@@ -39,5 +40,4 @@ class BoardGamesRepository {
 
         return Resource(ResourceStatus.SUCCESS, results)
     }
-
 }

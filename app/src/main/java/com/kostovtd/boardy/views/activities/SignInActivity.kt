@@ -65,32 +65,4 @@ class SignInActivity : BaseActivity(), SignInView {
         }
 
     }
-
-
-//    val request = SplitInstallRequest.newBuilder()
-//        .addModule("HeroRealms")
-//        .build()
-//    val manager = SplitInstallManagerFactory.create(this)
-//
-//    manager.startInstall(request)
-//
-//    manager.registerListener {
-//        when (it.status()) {
-//            SplitInstallSessionStatus.DOWNLOADING -> Snackbar.make(
-//                baseRootContainer,
-//                "Downloading",
-//                Snackbar.LENGTH_LONG
-//            ).show()
-//            SplitInstallSessionStatus.INSTALLED -> {
-//                val intent = Intent()
-//                intent.setClassName(
-//                    BuildConfig.APPLICATION_ID,
-//                    "com.kostovtd.herorealms.views.activities.HeroRealmsActivity"
-//                )
-//                startActivity(intent)
-//            }
-//            else -> {
-//            }
-//        }
-//    }
 }

@@ -1,5 +1,6 @@
 package com.kostovtd.boardy.views.activities
 
+import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -61,6 +62,9 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
     override fun showError(errorType: ErrorType) {
         errorMessageHandler.showErrorSnackbar(errorType)
     }
+
+
+    override fun getContext(): Context = this
 
 
     private fun setContentLayout() {
