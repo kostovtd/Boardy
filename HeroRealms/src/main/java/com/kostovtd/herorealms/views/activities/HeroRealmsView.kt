@@ -1,16 +1,9 @@
 package com.kostovtd.herorealms.views.activities
 
-import com.kostovtd.boardy.util.ErrorType
+import com.kostovtd.boardy.views.activities.BaseView
 
 
 /**
  * Created by tosheto on 25.12.20.
  */
-interface HeroRealmsView {
-    fun showLoading() {}
-    fun hideLoading() {}
-    fun showError(errorType: ErrorType) {}
-    fun finishActivity() {}
-    fun disableAllViews() {}
-    fun enableAllViews() {}
-}
+interface HeroRealmsView : BaseView
