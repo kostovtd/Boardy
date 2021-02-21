@@ -1,9 +1,11 @@
 package com.kostovtd.herorealms.views.activities
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.play.core.splitcompat.SplitCompat
 import com.google.firebase.database.DataSnapshot
@@ -12,8 +14,11 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.zxing.integration.android.IntentIntegrator
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.MessageHandler
+import com.kostovtd.boardy.util.generateQRCodeBitmap
+import com.kostovtd.boardy.views.activities.QRCodeScannerActivity
 import com.kostovtd.herorealms.R
 import com.kostovtd.herorealms.presenters.HeroRealmsPresenter
 import kotlinx.android.synthetic.main.activity_hero_realms.*
@@ -48,10 +53,13 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
         increase.setOnClickListener {
 //            points?.p1 = points?.p1?.plus(1)
 //            realtimeDatabase.setValue(points)
+            val qrBitmap = generateQRCodeBitmap(presenter.gameSession?.id ?: "")
+            imageQR.setImageBitmap(qrBitmap)
         }
 
         decrease.setOnClickListener {
 //            presenter.deleteGameSessionDatabase()
+            QRCodeScannerActivity.newIntentForResult(this)
         }
 
         add.setOnClickListener {
@@ -107,5 +115,17 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
 
     override fun showError(errorType: ErrorType) {
         messageHandler.showErrorSnackbar(errorType)
+    }
+
+
+    // Get the results:
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            if (result.contents == null) Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
+            else Toast.makeText(this, "Scanned: " + result.contents, Toast.LENGTH_LONG).show()
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 }

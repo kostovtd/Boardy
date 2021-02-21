@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class HeroRealmsPresenter : BasePresenter<HeroRealmsView>() {
 
     private val gameSessionRepository = GameSessionRepository()
-    private var gameSession: GameSession? = null
+    var gameSession: GameSession? = null
 
     fun createGameSession() {
         view?.let { view ->
