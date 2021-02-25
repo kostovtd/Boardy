@@ -4,7 +4,7 @@ package com.kostovtd.boardy.data.models
 /**
  * Created by tosheto on 16.02.21.
  */
-class GameSession(
+class GameSessionFirestore(
     var id: String = "",
     var adminId: String = "",
     var boardGameId: String = "",

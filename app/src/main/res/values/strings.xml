@@ -25,4 +25,5 @@
     <string name="password_mismatch">Passwords do not match</string>
     <string name="weak_password">Your password is too weak</string>
     <string name="email_is_already_in_use">The email is already in use</string>
+    <string name="qr_scanning_failed">Scanning failed. Please, try again!</string>
 </resources>

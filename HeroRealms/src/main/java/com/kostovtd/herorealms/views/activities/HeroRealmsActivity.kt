@@ -3,18 +3,13 @@ package com.kostovtd.herorealms.views.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.play.core.splitcompat.SplitCompat
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.google.zxing.integration.android.IntentIntegrator
+import com.kostovtd.boardy.data.models.GameSessionDatabase
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.MessageHandler
 import com.kostovtd.boardy.util.generateQRCodeBitmap
@@ -30,7 +25,6 @@ import kotlinx.android.synthetic.main.activity_hero_realms.*
 class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
 
     private lateinit var messageHandler: MessageHandler
-    private lateinit var realtimeDatabase: DatabaseReference
     private val presenter = HeroRealmsPresenter()
 
     override fun getContext(): Context = this
@@ -44,42 +38,23 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
         presenter.attachView(this)
 
         messageHandler = MessageHandler(this, baseRootContainer)
-        realtimeDatabase = Firebase.database.getReference("1q2w3e/AH24sfa23fs")
 
         finishHeroRealms.setOnClickListener {
             finish()
         }
 
-        increase.setOnClickListener {
-//            points?.p1 = points?.p1?.plus(1)
-//            realtimeDatabase.setValue(points)
-            val qrBitmap = generateQRCodeBitmap(presenter.gameSession?.id ?: "")
+        createQR.setOnClickListener {
+            val qrBitmap = generateQRCodeBitmap(presenter.gameSessionFirestore?.id ?: "")
             imageQR.setImageBitmap(qrBitmap)
         }
 
-        decrease.setOnClickListener {
-//            presenter.deleteGameSessionDatabase()
+        join.setOnClickListener {
             QRCodeScannerActivity.newIntentForResult(this)
         }
 
         add.setOnClickListener {
             presenter.createGameSession()
         }
-
-
-        val pointsListener = object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-//                points = snapshot.getValue<Points>()
-//                myPoints.text = "my points: " + points?.p1
-//                yourPoints.text = "your points: " + points?.p2
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                messageHandler.showErrorSnackbar(ErrorType.EMPTY_CONFIRM_PASSWORD)
-            }
-        }
-
-        realtimeDatabase.addValueEventListener(pointsListener)
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -118,14 +93,27 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
     }
 
 
-    // Get the results:
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null) {
-            if (result.contents == null) Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
-            else Toast.makeText(this, "Scanned: " + result.contents, Toast.LENGTH_LONG).show()
+            if (result.contents == null) {
+                showError(ErrorType.QR_SCANNING_FAILED)
+            } else {
+                val qrCode = result.contents
+                presenter.findAndListen(qrCode)
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+
+    override fun handleGameSessionChanges(gameSessionData: GameSessionDatabase) {
+        if(gameSessionData.active) {
+            textMyPoints.text = "My points: ${gameSessionData.points["XXX"]}"
+            textHisPoints.text = "His points: ${gameSessionData.points["ZZZ"]}"
+        } else {
+            presenter.findAndListen()
         }
     }
 }

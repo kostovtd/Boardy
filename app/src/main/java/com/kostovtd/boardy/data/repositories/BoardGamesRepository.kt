@@ -15,7 +15,7 @@ class BoardGamesRepository {
 
     private val firestore = Firebase.firestore
 
-
+    //TODO use success / failure listeners instead of try-catch
     suspend fun findGamesByName(name: String): Resource<ArrayList<BoardGame>> {
         val boardGamesCollection = firestore.collection(Constants.BOARDGAMES_COLLECTION_PATH)
 

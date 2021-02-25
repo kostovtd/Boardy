@@ -27,6 +27,7 @@ class MessageHandler(
             ErrorType.PASSWORDS_MISMATCH -> context.getString(R.string.password_mismatch)
             ErrorType.FIREBASE_AUTH_WEAK_PASSWORD -> context.getString(R.string.weak_password)
             ErrorType.FIREBASE_AUTH_USER_COLLISION -> context.getString(R.string.email_is_already_in_use)
+            ErrorType.QR_SCANNING_FAILED -> context.getString(R.string.qr_scanning_failed)
             else -> context.getString(R.string.something_went_wrong)
         }
 
@@ -69,7 +70,11 @@ enum class ErrorType {
     FIREBASE_AUTH_WEAK_PASSWORD,
     FIREBASE_AUTH_INVALID_CREDENTIALS,
     FIREBASE_AUTH_USER_COLLISION,
-    FIREBASE_AUTH_INVALID_USER
+    FIREBASE_AUTH_INVALID_USER,
+    FIRESTORE_FIND_GAME_SESSION,
+    DATABASE_FIND_GAME_SESSION,
+    QR_SCANNING_FAILED,
+
 }
 
 
