@@ -35,7 +35,7 @@ abstract class BasePresenter<V> {
     }
 
     protected fun <T> parseJson(json: String, typeToken: TypeToken<T>): T =
-        Gson().fromJson<T>(json, typeToken.type)
+        Gson().fromJson(json, typeToken.type)
 
     protected fun <T> handleResponse(response: Resource<T>): Boolean =
         view?.let {

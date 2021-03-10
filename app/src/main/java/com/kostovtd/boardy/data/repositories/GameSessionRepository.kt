@@ -11,7 +11,6 @@ import com.kostovtd.boardy.data.models.GameSessionDatabase
 import com.kostovtd.boardy.data.models.GameSessionFirestore
 import com.kostovtd.boardy.util.Constants.GAME_SESSIONS_COLLECTION_PATH
 import com.kostovtd.boardy.util.Constants.GAME_SESSION_CHILD
-import com.kostovtd.boardy.util.Constants.POINTS_CHILD
 import com.kostovtd.boardy.util.ErrorType
 import kotlinx.coroutines.tasks.await
 
@@ -63,9 +62,9 @@ class GameSessionRepository {
     }
 
 
-    suspend fun updateGameSessionFirestore() {
-
-    }
+//    suspend fun updateGameSessionFirestore() {
+//
+//    }
 
 
     suspend fun findGameSessionFirestore(gameSessionId: String): Resource<GameSessionFirestore> {
@@ -116,9 +115,9 @@ class GameSessionRepository {
     }
 
 
-    suspend fun updateGameSessionDatabase() {
-
-    }
+//    suspend fun updateGameSessionDatabase() {
+//
+//    }
 
 
     suspend fun deleteGameSessionDatabase(gameSessionId: String): Resource<String> {
@@ -163,5 +162,9 @@ class GameSessionRepository {
     }
 
 
-    fun stopListenGameSessionDatabase() = database.removeEventListener(databaseEventListener)
+    fun stopListenGameSessionDatabase(gameSessionId: String) {
+        database.removeEventListener(databaseEventListener)
+        database.child(GAME_SESSION_CHILD + "_" + gameSessionId)
+            .removeEventListener(databaseEventListener)
+    }
 }

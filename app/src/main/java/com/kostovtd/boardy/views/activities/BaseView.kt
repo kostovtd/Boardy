@@ -1,6 +1,7 @@
 package com.kostovtd.boardy.views.activities
 
 import android.content.Context
+import com.kostovtd.boardy.data.models.GameSessionDatabase
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.InfoType
 import com.kostovtd.boardy.util.SuccessType
@@ -19,6 +20,7 @@ interface BaseView {
     fun finishActivity() {}
     fun disableAllViews() {}
     fun enableAllViews() {}
+    fun handleGameSessionChanges(gameSessionDatabase: GameSessionDatabase) {}
     fun getContext(): Context
 
 }
