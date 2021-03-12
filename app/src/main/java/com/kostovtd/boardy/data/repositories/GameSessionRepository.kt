@@ -5,6 +5,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.kostovtd.boardy.data.models.GameSessionDatabase
@@ -21,7 +22,8 @@ class GameSessionRepository {
 
     private val firestore = Firebase.firestore
     private val database = Firebase.database.reference
-    private lateinit var databaseEventListener: ValueEventListener
+    private var databaseEventListener: ValueEventListener? = null
+    private var firestoreEventListener: ListenerRegistration? = null
 
 
     suspend fun createGameSessionFirestore(gameSessionFirestore: GameSessionFirestore): Resource<GameSessionFirestore> {
@@ -62,9 +64,22 @@ class GameSessionRepository {
     }
 
 
-//    suspend fun updateGameSessionFirestore() {
-//
-//    }
+    suspend fun updateGameSessionFirestore(gameSessionFirestore: GameSessionFirestore): Resource<GameSessionFirestore> {
+        lateinit var result: Resource<GameSessionFirestore>
+
+        firestore.collection(GAME_SESSIONS_COLLECTION_PATH)
+            .document(gameSessionFirestore.id)
+            .set(gameSessionFirestore)
+            .addOnSuccessListener {
+                result = Resource(ResourceStatus.SUCCESS, gameSessionFirestore)
+            }
+            .addOnFailureListener {
+                result = Resource(ResourceStatus.ERROR, gameSessionFirestore, ErrorType.UNKNOWN)
+            }
+            .await()
+
+        return result
+    }
 
 
     suspend fun findGameSessionFirestore(gameSessionId: String): Resource<GameSessionFirestore> {
@@ -90,16 +105,34 @@ class GameSessionRepository {
     }
 
 
-    suspend fun createGameSessionDatabase(gameSessionFirestore: GameSessionFirestore): Resource<GameSessionDatabase> {
+    fun subscribeGameSessionFirestore(gameSessionId: String, listener: IGameSessionRepository) {
+        firestoreEventListener = firestore.collection(GAME_SESSIONS_COLLECTION_PATH)
+            .document(gameSessionId)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    //TODO add logging logic
+                    listener.onGameSessionFirestoreUpdateError(ErrorType.UNKNOWN)
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    snapshot.toObject(GameSessionFirestore::class.java)?.let {
+                        listener.onGameSessionFirestoreUpdated(it)
+                    }
+                } else {
+                    //TODO add logging logic
+                    listener.onGameSessionFirestoreUpdateError(ErrorType.UNKNOWN)
+                }
+            }
+    }
+
+
+    fun unsubscribeGameSessionFirestore() = firestoreEventListener?.remove()
+
+
+    suspend fun createGameSessionDatabase(gameSessionDatabase: GameSessionDatabase): Resource<GameSessionDatabase> {
         lateinit var result: Resource<GameSessionDatabase>
-        val gameSessionDatabase = GameSessionDatabase(points = HashMap())
 
-        gameSessionFirestore.teams.forEach { team ->
-            gameSessionDatabase.points[team.key] =
-                gameSessionFirestore.startingPoints
-        }
-
-        database.child(GAME_SESSION_CHILD + "_" + gameSessionFirestore.id)
+        database.child(GAME_SESSION_CHILD + "_" + gameSessionDatabase.id)
             .setValue(gameSessionDatabase)
             .addOnSuccessListener {
                 result = Resource(ResourceStatus.SUCCESS, gameSessionDatabase)
@@ -115,9 +148,25 @@ class GameSessionRepository {
     }
 
 
-//    suspend fun updateGameSessionDatabase() {
-//
-//    }
+    suspend fun updateGameSessionDatabase(
+        gameSessionId: String,
+        gameSessionDatabase: GameSessionDatabase
+    ): Resource<GameSessionDatabase> {
+        lateinit var result: Resource<GameSessionDatabase>
+
+        database.child(GAME_SESSION_CHILD + "_" + gameSessionId)
+            .setValue(gameSessionDatabase)
+            .addOnSuccessListener {
+                result = Resource(ResourceStatus.SUCCESS, gameSessionDatabase)
+            }
+            .addOnFailureListener {
+                //TODO add logging logic
+                result = Resource(ResourceStatus.ERROR, gameSessionDatabase, ErrorType.UNKNOWN)
+            }
+            .await()
+
+        return result
+    }
 
 
     suspend fun deleteGameSessionDatabase(gameSessionId: String): Resource<String> {
@@ -138,7 +187,7 @@ class GameSessionRepository {
     }
 
 
-    fun findAndListenGameSessionDatabase(
+    fun subscribeGameSessionDatabase(
         gameSessionId: String,
         listener: IGameSessionRepository
     ) {
@@ -156,15 +205,18 @@ class GameSessionRepository {
             }
         }
 
-        database.removeEventListener(databaseEventListener)
-        database.child(GAME_SESSION_CHILD + "_" + gameSessionId)
-            .addValueEventListener(databaseEventListener)
+        databaseEventListener?.let {
+            database.child(GAME_SESSION_CHILD + "_" + gameSessionId)
+                .addValueEventListener(it)
+        }
     }
 
 
-    fun stopListenGameSessionDatabase(gameSessionId: String) {
-        database.removeEventListener(databaseEventListener)
-        database.child(GAME_SESSION_CHILD + "_" + gameSessionId)
-            .removeEventListener(databaseEventListener)
+    fun unsubscribeGameSessionDatabase(gameSessionId: String) {
+        databaseEventListener?.let { listener ->
+            database.removeEventListener(listener)
+            database.child(GAME_SESSION_CHILD + "_" + gameSessionId)
+                .removeEventListener(listener)
+        }
     }
 }

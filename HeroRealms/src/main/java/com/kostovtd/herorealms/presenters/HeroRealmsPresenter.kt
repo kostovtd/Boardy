@@ -6,6 +6,8 @@ import com.kostovtd.boardy.data.repositories.GameSessionRepository
 import com.kostovtd.boardy.data.repositories.IGameSessionRepository
 import com.kostovtd.boardy.presenters.BaseGamePresenter
 import com.kostovtd.herorealms.views.activities.HeroRealmsView
+import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * Created by tosheto on 16.02.21.
@@ -16,38 +18,63 @@ class HeroRealmsPresenter : BaseGamePresenter<HeroRealmsView>(), IGameSessionRep
 
     fun createHeroRealmsGameSession() {
         view?.let {
-            val gameSession = GameSessionFirestore(
-                "AAA",
+            val gameSessionFirestore = GameSessionFirestore(
+                "",
                 "BBB",
                 "CCC",
-                "DD/MM/YYYY",
+                Date(),
                 arrayListOf("Tom", "Jerry"),
                 hashMapOf(Pair("ZZZ", "Tom"), Pair("XXX", "Jerry")),
                 hashMapOf(Pair("ZZZ", "Tom"), Pair("XXX", "Jerry")),
-                "dd/mm/yyyy",
+                Date(),
                 arrayListOf("Jerry"),
                 50,
             )
-            createGameSession(gameSession)
+
+            val gameSessionDatabase = GameSessionDatabase(points = HashMap())
+
+            gameSessionFirestore.teams.forEach { team ->
+                gameSessionDatabase.points[team.key] =
+                    gameSessionFirestore.startingPoints
+            }
+
+            createGameSession(gameSessionFirestore, gameSessionDatabase)
         }
     }
 
 
-    fun findHeroRealmsGameSessionAndListen(gameSessionId: String) {
+    fun subscribeHeroRealmsGameSession(gameSessionId: String) {
         view?.let {
-            findGameSessionAndSubscribe(gameSessionId)
+            subscribeGameSession(gameSessionId)
         }
     }
 
 
-    fun unsubscribeHeroRealmsGameSession(gameSessionId: String) {
+    fun unsubscribeHeroRealmsGameSession() {
         view?.let {
-            unsubscribeGameSession(gameSessionId)
+            unsubscribeGameSession()
+        }
+    }
+
+
+    fun startHeroRealmsGameSession() {
+        view?.let {
+            startGameSession()
+        }
+    }
+
+
+    fun endHeroRealmsGameSession() {
+        view?.let {
+            endGameSession()
         }
     }
 
 
     override fun onGameSessionDatabaseUpdated(gameSessionDatabase: GameSessionDatabase) {
-        view?.handleGameSessionChanges(gameSessionDatabase)
+        view?.let {
+            this.gameSessionDatabase = gameSessionDatabase
+            it.handleGameSessionChanges(gameSessionDatabase)
+        }
     }
 }

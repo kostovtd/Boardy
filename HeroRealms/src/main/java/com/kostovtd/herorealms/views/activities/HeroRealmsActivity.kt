@@ -12,6 +12,7 @@ import com.kostovtd.boardy.data.models.GameSessionDatabase
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.MessageHandler
 import com.kostovtd.boardy.util.generateQRCodeBitmap
+import com.kostovtd.boardy.views.activities.QRCodeScannerActivity
 import com.kostovtd.herorealms.R
 import com.kostovtd.herorealms.presenters.HeroRealmsPresenter
 import kotlinx.android.synthetic.main.activity_hero_realms.*
@@ -38,7 +39,7 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
         messageHandler = MessageHandler(this, baseRootContainer)
 
         finishHeroRealms.setOnClickListener {
-            presenter.unsubscribeHeroRealmsGameSession(presenter.gameSessionFirestore?.id ?: "")
+            presenter.unsubscribeHeroRealmsGameSession()
         }
 
         createQR.setOnClickListener {
@@ -47,12 +48,20 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
         }
 
         join.setOnClickListener {
-//            QRCodeScannerActivity.newIntentForResult(this)
-            presenter.findHeroRealmsGameSessionAndListen(presenter.gameSessionFirestore?.id ?: "")
+            QRCodeScannerActivity.newIntentForResult(this)
+//            presenter.subscribeHeroRealmsGameSession(presenter.gameSessionFirestore?.id ?: "")
         }
 
         add.setOnClickListener {
             presenter.createHeroRealmsGameSession()
+        }
+
+        start.setOnClickListener {
+            presenter.startHeroRealmsGameSession()
+        }
+
+        end.setOnClickListener {
+            presenter.endHeroRealmsGameSession()
         }
     }
 
@@ -99,7 +108,7 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
                 showError(ErrorType.QR_SCANNING_FAILED)
             } else {
                 val qrCode = result.contents
-                presenter.findHeroRealmsGameSessionAndListen(qrCode)
+                presenter.subscribeHeroRealmsGameSession(qrCode)
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -108,11 +117,12 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
 
 
     override fun handleGameSessionChanges(gameSessionDatabase: GameSessionDatabase) {
-        if(gameSessionDatabase.active) {
+        if (gameSessionDatabase.active) {
             textMyPoints.text = "My points: ${gameSessionDatabase.points["XXX"]}"
             textHisPoints.text = "His points: ${gameSessionDatabase.points["ZZZ"]}"
         } else {
-//            presenter.findAndListen()
+            presenter.unsubscribeHeroRealmsGameSession()
+            finishActivity()
         }
     }
 }
