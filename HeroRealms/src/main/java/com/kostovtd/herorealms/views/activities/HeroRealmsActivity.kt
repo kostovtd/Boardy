@@ -11,8 +11,6 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.kostovtd.boardy.data.models.GameSessionDatabase
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.MessageHandler
-import com.kostovtd.boardy.util.generateQRCodeBitmap
-import com.kostovtd.boardy.views.activities.QRCodeScannerActivity
 import com.kostovtd.herorealms.R
 import com.kostovtd.herorealms.presenters.HeroRealmsPresenter
 import kotlinx.android.synthetic.main.activity_hero_realms.*
@@ -37,32 +35,6 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
         presenter.attachView(this)
 
         messageHandler = MessageHandler(this, baseRootContainer)
-
-        finishHeroRealms.setOnClickListener {
-            presenter.unsubscribeHeroRealmsGameSession()
-        }
-
-        createQR.setOnClickListener {
-            val qrBitmap = generateQRCodeBitmap(presenter.gameSessionFirestore?.id ?: "")
-            imageQR.setImageBitmap(qrBitmap)
-        }
-
-        join.setOnClickListener {
-            QRCodeScannerActivity.newIntentForResult(this)
-//            presenter.subscribeHeroRealmsGameSession(presenter.gameSessionFirestore?.id ?: "")
-        }
-
-        add.setOnClickListener {
-            presenter.createHeroRealmsGameSession()
-        }
-
-        start.setOnClickListener {
-            presenter.startHeroRealmsGameSession()
-        }
-
-        end.setOnClickListener {
-            presenter.endHeroRealmsGameSession()
-        }
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -117,12 +89,12 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
 
 
     override fun handleGameSessionChanges(gameSessionDatabase: GameSessionDatabase) {
-        if (gameSessionDatabase.active) {
-            textMyPoints.text = "My points: ${gameSessionDatabase.points["XXX"]}"
-            textHisPoints.text = "His points: ${gameSessionDatabase.points["ZZZ"]}"
-        } else {
-            presenter.unsubscribeHeroRealmsGameSession()
-            finishActivity()
-        }
+//        if (gameSessionDatabase.active) {
+//            textMyPoints.text = "My points: ${gameSessionDatabase.points["XXX"]}"
+//            textHisPoints.text = "His points: ${gameSessionDatabase.points["ZZZ"]}"
+//        } else {
+//            presenter.unsubscribeHeroRealmsGameSession()
+//            finishActivity()
+//        }
     }
 }
