@@ -10,7 +10,6 @@ import com.kostovtd.boardy.R
  */
 class QRCodeScannerActivity : CaptureActivity() {
 
-
     companion object {
         fun newIntentForResult(activity: Activity) {
             val integrator = IntentIntegrator(activity).apply {

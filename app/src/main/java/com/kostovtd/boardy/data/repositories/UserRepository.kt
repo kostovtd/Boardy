@@ -14,6 +14,9 @@ open class UserRepository {
         FirebaseAuth.getInstance().currentUser?.let { true } ?: run { false }
 
 
+    fun getCurrentUser(): FirebaseUser? = FirebaseAuth.getInstance().currentUser
+
+
     suspend fun signUpWithEmailAndPassword(email: String, password: String): Resource<User> {
         return try {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).await()

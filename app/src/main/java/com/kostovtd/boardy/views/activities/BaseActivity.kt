@@ -42,7 +42,7 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
             }
             return true
         }
-        return super.onOptionsItemSelected(item)
+        return super.onOptionsItemSelected(item!!)
     }
 
 
@@ -74,7 +74,7 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
         messageHandler.showInfoScankbar(infoType)
     }
 
-    override fun getContext(): Context = this
+    override fun getViewContext(): Context? = this
 
 
     private fun setContentLayout() {

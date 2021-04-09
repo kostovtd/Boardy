@@ -1,5 +1,7 @@
 package com.kostovtd.boardy.data.models
 
+import java.io.Serializable
+
 /**
  * Created by tosheto on 22.01.21.
  */
@@ -16,4 +18,4 @@ class BoardGame(
     val maxNumberOfPlayers: Int = -1,
     val minPlayingTime: Int = -1, // in minutes
     val maxPlayingTime: Int = -1 // in minutes
-)
+): Serializable

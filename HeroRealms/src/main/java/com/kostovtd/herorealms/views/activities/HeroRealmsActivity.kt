@@ -1,14 +1,15 @@
 package com.kostovtd.herorealms.views.activities
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.play.core.splitcompat.SplitCompat
-import com.google.zxing.integration.android.IntentIntegrator
-import com.kostovtd.boardy.data.models.GameSessionDatabase
+import com.kostovtd.boardy.data.models.BoardGameGameSession
+import com.kostovtd.boardy.data.models.PlayerType
+import com.kostovtd.boardy.util.Constants
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.MessageHandler
 import com.kostovtd.herorealms.R
@@ -24,7 +25,7 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
     private lateinit var messageHandler: MessageHandler
     private val presenter = HeroRealmsPresenter()
 
-    override fun getContext(): Context = this
+    override fun getViewContext(): Context = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +36,48 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
         presenter.attachView(this)
 
         messageHandler = MessageHandler(this, baseRootContainer)
+
+        intent?.let {
+            if (it.hasExtra(Constants.PLAYER_TYPE_KEY)) {
+                presenter.playerType =
+                    it.getSerializableExtra(Constants.PLAYER_TYPE_KEY) as PlayerType?
+            }
+
+            if (it.hasExtra(Constants.BOARD_GAME_GAME_SESSION_KEY)) {
+                presenter.boardGameGameSession =
+                    it.getSerializableExtra(Constants.BOARD_GAME_GAME_SESSION_KEY) as BoardGameGameSession?
+            }
+        }
+
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        presenter.playerType?.let { playerType ->
+            presenter.boardGameGameSession?.let { boardGameGameSession ->
+                val bundle = Bundle()
+                bundle.putSerializable(
+                    Constants.PLAYER_TYPE_KEY,
+                    playerType
+                )
+                bundle.putSerializable(
+                    Constants.BOARD_GAME_GAME_SESSION_KEY,
+                    boardGameGameSession
+                )
+
+                when (playerType) {
+                    PlayerType.ADMIN -> {
+                        navController.setGraph(R.navigation.nav_graph, bundle)
+                    }
+                    PlayerType.PLAYER -> {
+                        val navInflater = navController.navInflater
+                        val graph = navInflater.inflate(R.navigation.nav_graph)
+                        graph.startDestination = R.id.setUpHeroRealmsPlayersFragment
+                        navController.setGraph(graph, bundle)
+                    }
+                }
+            }
+        }
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -49,7 +92,7 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
             }
             return true
         }
-        return super.onOptionsItemSelected(item)
+        return super.onOptionsItemSelected(item!!)
     }
 
 
@@ -70,31 +113,5 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
 
     override fun showError(errorType: ErrorType) {
         messageHandler.showErrorSnackbar(errorType)
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result != null) {
-            if (result.contents == null) {
-                showError(ErrorType.QR_SCANNING_FAILED)
-            } else {
-                val qrCode = result.contents
-                presenter.subscribeHeroRealmsGameSession(qrCode)
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
-
-    override fun handleGameSessionChanges(gameSessionDatabase: GameSessionDatabase) {
-//        if (gameSessionDatabase.active) {
-//            textMyPoints.text = "My points: ${gameSessionDatabase.points["XXX"]}"
-//            textHisPoints.text = "His points: ${gameSessionDatabase.points["ZZZ"]}"
-//        } else {
-//            presenter.unsubscribeHeroRealmsGameSession()
-//            finishActivity()
-//        }
     }
 }

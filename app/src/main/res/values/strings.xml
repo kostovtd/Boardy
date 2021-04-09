@@ -13,6 +13,7 @@
     <string name="first_name_optional">First Name (optional)</string>
     <string name="last_name_optional">Last Name (optional)</string>
     <string name="scanning_code">Scanning code</string>
+    <string name="not_available">N/A</string>
 
     <!-- ERROR MESSAGES -->
     <string name="something_went_wrong">Someting went wrong. Please, try again!</string>

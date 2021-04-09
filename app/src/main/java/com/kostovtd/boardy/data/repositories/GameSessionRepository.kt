@@ -5,6 +5,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -75,6 +76,35 @@ class GameSessionRepository {
             }
             .addOnFailureListener {
                 result = Resource(ResourceStatus.ERROR, gameSessionFirestore, ErrorType.UNKNOWN)
+            }
+            .await()
+
+        return result
+    }
+
+
+    suspend fun updateGameSessionFirestoreField(
+        gameSessionId: String,
+        fieldName: String,
+        fieldValue: Any,
+        isFieldArray: Boolean
+    ): Resource<GameSessionFirestore> {
+        lateinit var result: Resource<GameSessionFirestore>
+
+        firestore.collection(GAME_SESSIONS_COLLECTION_PATH)
+            .document(gameSessionId)
+            .update(
+                fieldName, if (isFieldArray) {
+                    FieldValue.arrayUnion(fieldValue)
+                } else {
+                    fieldValue
+                }
+            )
+            .addOnSuccessListener {
+                result = Resource(ResourceStatus.SUCCESS, null)
+            }
+            .addOnFailureListener {
+                result = Resource(ResourceStatus.ERROR, null, ErrorType.UNKNOWN)
             }
             .await()
 

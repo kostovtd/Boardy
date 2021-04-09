@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_setUpHeroRealmsModeFragment_to_setUpHeroRealmsPlayersFragment"
             app:destination="@id/setUpHeroRealmsPlayersFragment" />
+        <argument
+            android:name="boardGameGameSession"
+            app:argType="com.kostovtd.boardy.data.models.BoardGameGameSession" />
     </fragment>
     <fragment
         android:id="@+id/setUpHeroRealmsPlayersFragment"
@@ -25,6 +28,12 @@
             android:id="@+id/action_setUpHeroRealmsPlayersFragment_to_setUpHeroRealmsModeFragment"
             app:destination="@id/setUpHeroRealmsModeFragment"
             app:popUpTo="@id/setUpHeroRealmsModeFragment" />
+        <argument
+            android:name="playerType"
+            app:argType="com.kostovtd.boardy.data.models.PlayerType" />
+        <argument
+            android:name="boardGameGameSession"
+            app:argType="com.kostovtd.boardy.data.models.BoardGameGameSession" />
     </fragment>
     <fragment
         android:id="@+id/heroRealmsGameFragment"

@@ -1,5 +1,6 @@
 package com.kostovtd.boardy.presenters
 
+import com.kostovtd.boardy.data.models.BoardGame
 import com.kostovtd.boardy.data.models.GameSessionDatabase
 import com.kostovtd.boardy.data.models.GameSessionFirestore
 import com.kostovtd.boardy.data.repositories.GameSessionRepository
@@ -14,6 +15,7 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     private val gameSessionRepository = GameSessionRepository()
     var gameSessionFirestore: GameSessionFirestore? = null
     var gameSessionDatabase: GameSessionDatabase? = null
+    var boardGame: BoardGame? = null
 
     protected fun createGameSession(gameSessionFirestore: GameSessionFirestore, gameSessionDatabase: GameSessionDatabase) {
         view?.let { view ->
@@ -155,15 +157,14 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
         }
     }
 
-
-    private fun subscribeGameSessionFirestore(gameSessionId: String) {
+    protected fun subscribeGameSessionFirestore(gameSessionId: String) {
         view?.let {
             gameSessionRepository.subscribeGameSessionFirestore(gameSessionId, this)
         }
     }
 
 
-    private fun subscribeGameSessionDatabase(gameSessionId: String) {
+    protected fun subscribeGameSessionDatabase(gameSessionId: String) {
         view?.let {
             gameSessionRepository.subscribeGameSessionDatabase(gameSessionId, this)
         }

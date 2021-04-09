@@ -21,6 +21,6 @@ interface BaseView {
     fun disableAllViews() {}
     fun enableAllViews() {}
     fun handleGameSessionChanges(gameSessionDatabase: GameSessionDatabase) {}
-    fun getContext(): Context
+    fun getViewContext(): Context?
 
 }

@@ -5,8 +5,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.kostovtd.boardy.data.models.BoardGame
 import com.kostovtd.boardy.util.Constants
+import com.kostovtd.boardy.util.ErrorType
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 /**
  * Created by tosheto on 23.01.21.
@@ -39,5 +39,27 @@ class BoardGamesRepository {
         }
 
         return Resource(ResourceStatus.SUCCESS, results)
+    }
+
+
+    suspend fun findBoardGameById(id: String): Resource<BoardGame> {
+        lateinit var result: Resource<BoardGame>
+
+        firestore.collection(Constants.BOARDGAMES_COLLECTION_PATH)
+            .document(id)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    val boardGame = document.toObject(BoardGame::class.java)
+                    boardGame?.id = id
+                    result = Resource(ResourceStatus.SUCCESS, boardGame)
+                }
+            }
+            .addOnFailureListener {
+                result = Resource(ResourceStatus.ERROR, null, ErrorType.FIRESTORE_FIND_GAME_SESSION)
+            }
+            .await()
+
+        return result
     }
 }
