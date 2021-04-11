@@ -66,16 +66,6 @@ fun isModuleInstalled(context: Context, moduleName: String): Boolean =
     SplitInstallManagerFactory.create(context).installedModules.contains(moduleName)
 
 
-    fun uninstallModules(context: Context, moduleNames: List<String>) {
-        moduleNames.forEach { moduleName ->
-            if(isModuleInstalled(context, moduleName)) {
-                SplitInstallManagerFactory.create(context).deferredUninstall(moduleNames)
-            }
-        }
-    }
-}
-
-
 interface DynamicModuleListener {
     fun onDynamicModuleDownloading()
     fun onDynamicModuleInstalled()
