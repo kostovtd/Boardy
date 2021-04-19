@@ -13,6 +13,7 @@ import com.kostovtd.boardy.presenters.BasePresenter
 import com.kostovtd.boardy.util.Constants.FIRESTORE_VALUE_SEPARATOR
 import com.kostovtd.boardy.util.Constants.PLAYERS_FIELD
 import com.kostovtd.boardy.util.Constants.START_TIME_FIELD
+import com.kostovtd.boardy.util.Constants.TEAMS_FIELD
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.generateQRCodeBitmap
 import com.kostovtd.herorealms.views.fragments.SetUpHeroRealmsPlayersView
@@ -97,17 +98,30 @@ class SetUpHeroRealmsPlayersPresenter : BasePresenter<SetUpHeroRealmsPlayersView
                     userRepository.getCurrentUser()?.let { user ->
                         val playersArrEntry = user.uid + FIRESTORE_VALUE_SEPARATOR + user.email
 
-                        val updateGameSessionFirestoreFieldResponse = gameSessionRepository.updateGameSessionFirestoreField(
+                        val updateGameSessionFirestorePlayersFieldResponse = gameSessionRepository.updateGameSessionFirestoreField(
                             gameSessionId,
                             PLAYERS_FIELD,
                             playersArrEntry,
                             true
                         )
 
-                        val isFirestoreFieldUpdated = handleResponse(updateGameSessionFirestoreFieldResponse)
+                        val isFirestorePlayersFieldUpdated = handleResponse(updateGameSessionFirestorePlayersFieldResponse)
 
-                        if(isFirestoreFieldUpdated) {
-                            subscribeGameSessionFirestore()
+                        if(isFirestorePlayersFieldUpdated) {
+                            val teamsArrEntry = user.uid + FIRESTORE_VALUE_SEPARATOR + user.email
+
+                            val updateGameSessionFirestoreTeamsFieldResponse = gameSessionRepository.updateGameSessionFirestoreField(
+                                gameSessionId,
+                                TEAMS_FIELD,
+                                teamsArrEntry,
+                                true
+                            )
+
+                            val isFirestoreTeamsFieldUpdated = handleResponse(updateGameSessionFirestoreTeamsFieldResponse)
+
+                            if(isFirestoreTeamsFieldUpdated) {
+                                subscribeGameSessionFirestore()
+                            }
                         }
 
                         scopeMainThread.launch {

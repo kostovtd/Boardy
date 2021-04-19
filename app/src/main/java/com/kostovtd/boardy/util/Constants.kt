@@ -9,6 +9,7 @@ object Constants {
     const val GAME_SESSIONS_COLLECTION_PATH = "gameSessions"
     const val NAME_FIELD = "name"
     const val PLAYERS_FIELD = "players"
+    const val TEAMS_FIELD = "teams"
     const val START_TIME_FIELD = "startTime"
     const val FIRESTORE_VALUE_SEPARATOR = "|"
 
