@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kostovtd.boardy.data.models.BoardGameGameSession
@@ -52,6 +53,10 @@ class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_pl
                 }
             }
         }
+
+        startGame.setOnClickListener {
+            presenter.startGameSession()
+        }
     }
 
 
@@ -83,6 +88,26 @@ class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_pl
         startGame.isEnabled = true
     }
 
+
+    override fun enableStartGame() {
+        startGame.isEnabled = true
+    }
+
+
+    override fun disableStartGame() {
+        startGame.isEnabled = false
+    }
+
+
+    override fun startHeroRealmsGameFragmentAsAdmin() {
+        val action = SetUpHeroRealmsPlayersFragmentDirections.actionSetUpHeroRealmsPlayersFragmentToHeroRealmsGameFragment()
+        findNavController().navigate(action)
+    }
+
+    override fun startHeroRealmsGameFragmentAsPlayer() {
+        val action = SetUpHeroRealmsPlayersFragmentDirections.actionSetUpHeroRealmsPlayersFragmentToHeroRealmsGameFragment()
+        findNavController().navigate(action)
+    }
 
     private fun setUpViewsByPlayerType(playerType: PlayerType) {
         when(playerType) {

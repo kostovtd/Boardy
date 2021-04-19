@@ -3,6 +3,7 @@ package com.kostovtd.herorealms.presenters
 import android.util.Base64
 import com.google.gson.Gson
 import com.kostovtd.boardy.data.models.BoardGameGameSession
+import com.kostovtd.boardy.data.models.GameSessionDatabase
 import com.kostovtd.boardy.data.models.GameSessionFirestore
 import com.kostovtd.boardy.data.models.PlayerType
 import com.kostovtd.boardy.data.repositories.GameSessionRepository
@@ -11,10 +12,14 @@ import com.kostovtd.boardy.data.repositories.UserRepository
 import com.kostovtd.boardy.presenters.BasePresenter
 import com.kostovtd.boardy.util.Constants.FIRESTORE_VALUE_SEPARATOR
 import com.kostovtd.boardy.util.Constants.PLAYERS_FIELD
+import com.kostovtd.boardy.util.Constants.START_TIME_FIELD
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.generateQRCodeBitmap
 import com.kostovtd.herorealms.views.fragments.SetUpHeroRealmsPlayersView
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class SetUpHeroRealmsPlayersPresenter : BasePresenter<SetUpHeroRealmsPlayersView>(),
     IGameSessionRepository {
@@ -43,6 +48,44 @@ class SetUpHeroRealmsPlayersPresenter : BasePresenter<SetUpHeroRealmsPlayersView
         }
     }
 
+    fun startGameSession() {
+        view?.let { view ->
+            scopeIO.launch {
+                scopeMainThread.launch {
+                    view.showLoading()
+                    view.disableAllViews()
+                }
+
+                val gameSessionPoints = HashMap<String, Int>()
+                gameSessionFirestore?.teams?.forEach { team ->
+                    val id = team.split(FIRESTORE_VALUE_SEPARATOR)[0]
+                    gameSessionPoints[id] = 50
+                }
+
+                val gameSessionDatabase = GameSessionDatabase(
+                    boardGameGameSession?.gameSessionId ?: "",
+                    true,
+                    gameSessionPoints
+                )
+
+                val responseDatabase =
+                    gameSessionRepository.createGameSessionDatabase(gameSessionDatabase)
+                val isGameSessionDatabaseCreated = handleResponse(responseDatabase)
+
+                if (isGameSessionDatabaseCreated) {
+                    val responseUpdateGameSessionFirestore = gameSessionRepository.updateGameSessionFirestoreField(
+                        boardGameGameSession?.gameSessionId ?: "",
+                        START_TIME_FIELD, Date(), false)
+                    val isGameSessionFirestoreUpdated = handleResponse(responseUpdateGameSessionFirestore)
+                    if(!isGameSessionFirestoreUpdated) {
+                        handleError(responseDatabase.error)
+                    }
+                } else {
+                    handleError(responseDatabase.error)
+                }
+            }
+        }
+    }
 
     fun addCurrentUserToFirestorePlayersListAndSubscribe() {
         view?.let { view ->
@@ -90,7 +133,25 @@ class SetUpHeroRealmsPlayersPresenter : BasePresenter<SetUpHeroRealmsPlayersView
     override fun onGameSessionFirestoreUpdated(gameSessionFirestore: GameSessionFirestore) {
         view?.let {
             this.gameSessionFirestore = gameSessionFirestore
-            it.showPlayers(ArrayList(gameSessionFirestore.players), gameSessionFirestore.adminId)
+            when(playerType) {
+                PlayerType.ADMIN -> {
+                    if(gameSessionFirestore.startTime?.after(gameSessionFirestore.endTime) == true) {
+                        it.startHeroRealmsGameFragmentAsAdmin()
+                    } else {
+                        if(gameSessionFirestore.players.size == 2) {
+                            it.enableStartGame()
+                        }
+                        it.showPlayers(ArrayList(gameSessionFirestore.players), gameSessionFirestore.adminId)
+                    }
+                }
+                PlayerType.PLAYER -> {
+                    if(gameSessionFirestore.startTime?.after(gameSessionFirestore.endTime) == true) {
+                        it.startHeroRealmsGameFragmentAsAdmin()
+                    } else {
+                        it.showPlayers(ArrayList(gameSessionFirestore.players), gameSessionFirestore.adminId)
+                    }
+                }
+            }
         }
     }
 
