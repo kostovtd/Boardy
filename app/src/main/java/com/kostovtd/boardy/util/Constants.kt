@@ -11,6 +11,7 @@ object Constants {
     const val PLAYERS_FIELD = "players"
     const val TEAMS_FIELD = "teams"
     const val START_TIME_FIELD = "startTime"
+    const val END_TIME_FIELD = "endTime"
     const val FIRESTORE_VALUE_SEPARATOR = "|"
 
     // --------- REALTIME DATABASE ---------
@@ -18,7 +19,7 @@ object Constants {
     const val GAME_SESSION_CHILD = "gameSession"
 
     // --------- INTENT EXTRA KEYS ---------
-    const val GAME_SESSION_ID_KEY = "gameSessionIdKey"
+    const val GAME_SESSION_ID_KEY = "gameSessionId"
     const val BOARD_GAME_ID_KEY = "boardGameId"
     const val BOARD_GAME_KEY = "boardGame"
     const val GAME_SESSION_FIRESTORE_KEY = "gameSessionFirestore"

@@ -43,5 +43,12 @@
         android:id="@+id/heroRealmsGameFragment"
         android:name="com.kostovtd.herorealms.views.fragments.HeroRealmsGameFragment"
         android:label="HeroRealmsGameFragment"
-        app:moduleName="HeroRealms" />
+        app:moduleName="HeroRealms" >
+        <argument
+            android:name="playerType"
+            app:argType="com.kostovtd.boardy.data.models.PlayerType" />
+        <argument
+            android:name="gameSessionId"
+            app:argType="string" />
+    </fragment>
 </navigation>

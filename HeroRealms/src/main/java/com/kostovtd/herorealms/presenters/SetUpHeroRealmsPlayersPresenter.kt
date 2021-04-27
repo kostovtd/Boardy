@@ -150,6 +150,7 @@ class SetUpHeroRealmsPlayersPresenter : BasePresenter<SetUpHeroRealmsPlayersView
             when(playerType) {
                 PlayerType.ADMIN -> {
                     if(gameSessionFirestore.startTime?.after(gameSessionFirestore.endTime) == true) {
+                        gameSessionRepository.unsubscribeGameSessionFirestore()
                         it.startHeroRealmsGameFragmentAsAdmin()
                     } else {
                         if(gameSessionFirestore.players.size == 2) {
@@ -160,6 +161,7 @@ class SetUpHeroRealmsPlayersPresenter : BasePresenter<SetUpHeroRealmsPlayersView
                 }
                 PlayerType.PLAYER -> {
                     if(gameSessionFirestore.startTime?.after(gameSessionFirestore.endTime) == true) {
+                        gameSessionRepository.unsubscribeGameSessionFirestore()
                         it.startHeroRealmsGameFragmentAsAdmin()
                     } else {
                         it.showPlayers(ArrayList(gameSessionFirestore.players), gameSessionFirestore.adminId)
