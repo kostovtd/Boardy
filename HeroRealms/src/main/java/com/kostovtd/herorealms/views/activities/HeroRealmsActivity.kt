@@ -72,7 +72,7 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
                     PlayerType.PLAYER -> {
                         val navInflater = navController.navInflater
                         val graph = navInflater.inflate(R.navigation.nav_graph)
-                        graph.startDestination = R.id.setUpHeroRealmsPlayersFragment
+                        graph.setStartDestination(R.id.setUpHeroRealmsPlayersFragment)
                         navController.setGraph(graph, bundle)
                     }
                 }
@@ -85,14 +85,13 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
         SplitCompat.install(this)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        item.let {
             when (it.itemId) {
                 android.R.id.home -> onBackPressed()
             }
             return true
         }
-        return super.onOptionsItemSelected(item!!)
     }
 
 

@@ -35,14 +35,13 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
     }
 
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        item.let {
             when (it.itemId) {
                 android.R.id.home -> onBackPressed()
             }
             return true
         }
-        return super.onOptionsItemSelected(item!!)
     }
 
 
