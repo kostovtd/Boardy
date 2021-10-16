@@ -1,4 +1,4 @@
-package com.kostovtd.boardy.util
+package com.kostovtd.boardy.web
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
