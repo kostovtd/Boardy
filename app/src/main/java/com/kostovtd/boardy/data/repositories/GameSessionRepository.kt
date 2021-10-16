@@ -14,6 +14,8 @@ import com.kostovtd.boardy.data.models.GameSessionFirestore
 import com.kostovtd.boardy.util.Constants.GAME_SESSIONS_COLLECTION_PATH
 import com.kostovtd.boardy.util.Constants.GAME_SESSION_CHILD
 import com.kostovtd.boardy.util.ErrorType
+import com.kostovtd.boardy.web.APIClient
+import com.kostovtd.boardy.web.responses.CreateGameSessionResponse
 import kotlinx.coroutines.tasks.await
 
 /**
@@ -26,6 +28,20 @@ class GameSessionRepository {
     private var databaseEventListener: ValueEventListener? = null
     private var firestoreEventListener: ListenerRegistration? = null
 
+
+    suspend fun createGameSession(
+        gameSessionFirestore: GameSessionFirestore
+    ): Resource<CreateGameSessionResponse> {
+//        val body = CreateGameSessionBody(boardGameId, adminId, players, teams, startingPoints)
+
+        val response = APIClient.firebaseAPI.postCreateGameSession(gameSessionFirestore)
+
+        return if(response.success) {
+            Resource(ResourceStatus.SUCCESS, response)
+        } else { //TODO Add other network error handling
+            Resource(ResourceStatus.ERROR, null, ErrorType.FIREBASE_CREATE_GAME_SESSION)
+        }
+    }
 
     suspend fun createGameSessionFirestore(gameSessionFirestore: GameSessionFirestore): Resource<GameSessionFirestore> {
         val gameSessionsCollection = firestore.collection(GAME_SESSIONS_COLLECTION_PATH)

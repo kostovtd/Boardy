@@ -138,7 +138,7 @@ class SetUpHeroRealmsPlayersPresenter : BasePresenter<SetUpHeroRealmsPlayersView
     fun subscribeGameSessionFirestore() {
         view?.let {
             boardGameGameSession?.gameSessionId?.let {
-                gameSessionRepository.subscribeGameSessionFirestore(it, this)
+//                gameSessionRepository.subscribeGameSessionFirestore(it, this)
             }
         }
     }
@@ -149,7 +149,7 @@ class SetUpHeroRealmsPlayersPresenter : BasePresenter<SetUpHeroRealmsPlayersView
             this.gameSessionFirestore = gameSessionFirestore
             when(playerType) {
                 PlayerType.ADMIN -> {
-                    if(gameSessionFirestore.startTime?.after(gameSessionFirestore.endTime) == true) {
+                    if(gameSessionFirestore.startTime?.toDate()?.after(gameSessionFirestore.endTime?.toDate()) == true) {
                         gameSessionRepository.unsubscribeGameSessionFirestore()
                         it.startHeroRealmsGameFragmentAsAdmin()
                     } else {
@@ -160,7 +160,7 @@ class SetUpHeroRealmsPlayersPresenter : BasePresenter<SetUpHeroRealmsPlayersView
                     }
                 }
                 PlayerType.PLAYER -> {
-                    if(gameSessionFirestore.startTime?.after(gameSessionFirestore.endTime) == true) {
+                    if(gameSessionFirestore.startTime?.toDate()?.after(gameSessionFirestore.endTime?.toDate()) == true) {
                         gameSessionRepository.unsubscribeGameSessionFirestore()
                         it.startHeroRealmsGameFragmentAsAdmin()
                     } else {

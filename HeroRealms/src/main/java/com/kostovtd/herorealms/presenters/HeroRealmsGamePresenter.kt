@@ -48,7 +48,7 @@ class HeroRealmsGamePresenter: BasePresenter<HeroRealmsGameView>(), IGameSession
         view?.let { view ->
             view.updateGameSessionInfo(gameSessionFirestore)
 
-            if(gameSessionFirestore.endTime?.after(gameSessionFirestore.startTime) == true) {
+            if(gameSessionFirestore.endTime?.toDate()?.after(gameSessionFirestore.startTime?.toDate()) == true) {
                 gameSessionRepository.unsubscribeGameSessionFirestore()
                 view.finishActivity()
             }
