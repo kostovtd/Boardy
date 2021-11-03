@@ -17,7 +17,6 @@ import com.kostovtd.boardy.web.APIClient
 import com.kostovtd.boardy.web.bodies.UpdateGameSessionBody
 import com.kostovtd.boardy.web.responses.BaseFirebaseResponse
 import com.kostovtd.boardy.web.responses.CreateGameSessionResponse
-import kotlinx.coroutines.tasks.await
 
 /**
  * Created by tosheto on 16.02.21.
@@ -61,29 +60,6 @@ class GameSessionRepository {
     }
 
 
-    suspend fun findGameSessionFirestore(gameSessionId: String): Resource<GameSessionFirestore> {
-        lateinit var result: Resource<GameSessionFirestore>
-
-        val gameSessionCollection = firestore.collection(GAME_SESSIONS_COLLECTION_PATH)
-
-        gameSessionCollection.document(gameSessionId)
-            .get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    val gameSession = document.toObject(GameSessionFirestore::class.java)
-                    gameSession?.id = gameSessionId
-                    result = Resource(ResourceStatus.SUCCESS, gameSession)
-                }
-            }
-            .addOnFailureListener {
-                result = Resource(ResourceStatus.ERROR, null, ErrorType.FIRESTORE_FIND_GAME_SESSION)
-            }
-            .await()
-
-        return result
-    }
-
-
     fun subscribeGameSessionFirestore(gameSessionId: String, listener: IGameSessionRepository) {
         firestoreEventListener = firestore.collection(GAME_SESSIONS_COLLECTION_PATH)
             .document(gameSessionId)
@@ -106,64 +82,6 @@ class GameSessionRepository {
 
 
     fun unsubscribeGameSessionFirestore() = firestoreEventListener?.remove()
-
-
-    suspend fun createGameSessionDatabase(gameSessionDatabase: GameSessionDatabase): Resource<GameSessionDatabase> {
-        lateinit var result: Resource<GameSessionDatabase>
-
-        database.child(GAME_SESSION_CHILD + "_" + gameSessionDatabase.id)
-            .setValue(gameSessionDatabase)
-            .addOnSuccessListener {
-                result = Resource(ResourceStatus.SUCCESS, gameSessionDatabase)
-            }
-            .addOnFailureListener {
-                //TODO add logging logic
-                result = Resource(ResourceStatus.ERROR, gameSessionDatabase, ErrorType.UNKNOWN)
-            }
-            .await()
-
-
-        return result
-    }
-
-
-    suspend fun updateGameSessionDatabase(
-        gameSessionId: String,
-        gameSessionDatabase: GameSessionDatabase
-    ): Resource<GameSessionDatabase> {
-        lateinit var result: Resource<GameSessionDatabase>
-
-        database.child(GAME_SESSION_CHILD + "_" + gameSessionId)
-            .setValue(gameSessionDatabase)
-            .addOnSuccessListener {
-                result = Resource(ResourceStatus.SUCCESS, gameSessionDatabase)
-            }
-            .addOnFailureListener {
-                //TODO add logging logic
-                result = Resource(ResourceStatus.ERROR, gameSessionDatabase, ErrorType.UNKNOWN)
-            }
-            .await()
-
-        return result
-    }
-
-
-    suspend fun deleteGameSessionDatabase(gameSessionId: String): Resource<String> {
-        lateinit var result: Resource<String>
-
-        database.child(GAME_SESSION_CHILD + "_" + gameSessionId)
-            .removeValue()
-            .addOnSuccessListener {
-                result = Resource(ResourceStatus.SUCCESS, gameSessionId)
-            }
-            .addOnFailureListener {
-                //TODO add logging logic
-                result = Resource(ResourceStatus.ERROR, gameSessionId)
-            }
-            .await()
-
-        return result
-    }
 
 
     fun subscribeGameSessionDatabase(

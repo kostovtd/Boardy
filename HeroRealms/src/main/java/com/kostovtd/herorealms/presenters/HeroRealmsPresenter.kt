@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 /**
  * Created by tosheto on 16.02.21.
  */
+//TODO Remove the methods if they are not needed at all
 class HeroRealmsPresenter : BaseGamePresenter<HeroRealmsView>(), IGameSessionRepository {
 
     fun startHeroRealmsGameSession() {

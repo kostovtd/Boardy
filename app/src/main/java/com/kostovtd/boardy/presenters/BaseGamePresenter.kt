@@ -6,7 +6,6 @@ import com.kostovtd.boardy.data.repositories.GameSessionRepository
 import com.kostovtd.boardy.data.repositories.IGameSessionRepository
 import com.kostovtd.boardy.data.repositories.Resource
 import com.kostovtd.boardy.data.repositories.ResourceStatus
-import com.kostovtd.boardy.views.activities.BaseView
 import com.kostovtd.boardy.web.responses.BaseFirebaseResponse
 
 open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
@@ -84,21 +83,17 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
         }
     }
 
-    protected fun subscribeGameSessionFirestore(gameSessionId: String) {
+
+    private fun subscribeGameSessionFirestore(gameSessionId: String) {
         view?.let {
             gameSessionRepository.subscribeGameSessionFirestore(gameSessionId, this)
         }
     }
 
 
-    protected fun subscribeGameSessionDatabase(gameSessionId: String) {
+    private fun subscribeGameSessionDatabase(gameSessionId: String) {
         view?.let {
             gameSessionRepository.subscribeGameSessionDatabase(gameSessionId, this)
         }
-    }
-
-
-    override fun onGameSessionDatabaseUpdated(gameSessionDatabase: GameSessionDatabase) {
-        (view as BaseView).handleGameSessionChanges(gameSessionDatabase)
     }
 }
