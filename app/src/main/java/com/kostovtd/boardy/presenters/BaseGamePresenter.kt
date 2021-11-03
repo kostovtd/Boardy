@@ -1,14 +1,13 @@
 package com.kostovtd.boardy.presenters
 
 import com.google.firebase.Timestamp
-import com.kostovtd.boardy.data.models.BoardGame
-import com.kostovtd.boardy.data.models.GameSessionDatabase
-import com.kostovtd.boardy.data.models.GameSessionFirestore
+import com.kostovtd.boardy.data.models.*
 import com.kostovtd.boardy.data.repositories.GameSessionRepository
 import com.kostovtd.boardy.data.repositories.IGameSessionRepository
+import com.kostovtd.boardy.data.repositories.Resource
+import com.kostovtd.boardy.data.repositories.ResourceStatus
 import com.kostovtd.boardy.views.activities.BaseView
-import kotlinx.coroutines.launch
-import java.util.*
+import com.kostovtd.boardy.web.responses.BaseFirebaseResponse
 
 open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
 
@@ -16,68 +15,42 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     var gameSessionFirestore: GameSessionFirestore? = null
     var gameSessionDatabase: GameSessionDatabase? = null
     var boardGame: BoardGame? = null
+    var playerType: PlayerType? = null
+    var boardGameGameSession: BoardGameGameSession? = null
 
 
-    protected fun startGameSession() {
+    protected suspend fun startGameSession(): Resource<BaseFirebaseResponse> {
         view?.let {
-            gameSessionFirestore?.startTime = Timestamp.now()
-            gameSessionDatabase?.active = true
+            boardGameGameSession?.gameSessionId?.let { gameSessionId ->
+                gameSessionFirestore?.startTime = Timestamp.now()
+                gameSessionDatabase?.active = true
 
-            gameSessionFirestore?.let { it1 -> updateGameSession(it1, gameSessionDatabase) }
-        }
-    }
-
-
-    protected fun endGameSession() {
-        view?.let {
-            gameSessionFirestore?.endTime = Timestamp.now()
-            gameSessionDatabase?.active = false
-
-            gameSessionFirestore?.let { it1 -> updateGameSession(it1, gameSessionDatabase) }
-        }
-    }
-
-
-    private fun updateGameSession(
-        gameSessionFirestore: GameSessionFirestore,
-        gameSessionDatabase: GameSessionDatabase?
-    ) {
-        view?.let {
-            scopeIO.launch {
-                this@BaseGamePresenter.gameSessionFirestore = gameSessionFirestore
-
-                scopeMainThread.launch {
-                    (view as BaseView).showLoading()
-                    (view as BaseView).disableAllViews()
-                }
-
-                val responseFirestore =
-                    gameSessionRepository.updateGameSessionFirestore(gameSessionFirestore)
-                val isGameSessionFirestoreUpdated = handleResponse(responseFirestore)
-
-                if (isGameSessionFirestoreUpdated) {
-                    gameSessionDatabase?.let { gameSessionDatabase ->
-                        this@BaseGamePresenter.gameSessionDatabase = gameSessionDatabase
-
-                        val responseDatabase = gameSessionRepository.updateGameSessionDatabase(
-                            gameSessionFirestore.id,
-                            gameSessionDatabase
-                        )
-                        val isGameSessionDatabaseUpdate = handleResponse(responseDatabase)
-
-                        if (isGameSessionDatabaseUpdate) {
-                            scopeMainThread.launch {
-                                (view as BaseView).hideLoading()
-                                (view as BaseView).enableAllViews()
-                            }
-                        } else {
-                            handleError(responseDatabase.error)
-                        }
-                    }
-                } else {
-                    handleError(responseFirestore.error)
-                }
+                return gameSessionRepository.updateGameSession(
+                    gameSessionId,
+                    gameSessionFirestore,
+                    gameSessionDatabase
+                )
             }
+        } ?: run {
+            return Resource(ResourceStatus.ERROR, null)
+        }
+    }
+
+
+    protected suspend fun endGameSession(): Resource<BaseFirebaseResponse> {
+        view?.let {
+            boardGameGameSession?.gameSessionId?.let { gameSessionId ->
+                gameSessionFirestore?.endTime = Timestamp.now()
+                gameSessionDatabase?.active = false
+
+                return gameSessionRepository.updateGameSession(
+                    gameSessionId,
+                    gameSessionFirestore,
+                    gameSessionDatabase
+                )
+            }
+        } ?: run {
+            return Resource(ResourceStatus.ERROR, null)
         }
     }
 

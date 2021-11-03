@@ -5,7 +5,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -15,6 +14,8 @@ import com.kostovtd.boardy.util.Constants.GAME_SESSIONS_COLLECTION_PATH
 import com.kostovtd.boardy.util.Constants.GAME_SESSION_CHILD
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.web.APIClient
+import com.kostovtd.boardy.web.bodies.UpdateGameSessionBody
+import com.kostovtd.boardy.web.responses.BaseFirebaseResponse
 import com.kostovtd.boardy.web.responses.CreateGameSessionResponse
 import kotlinx.coroutines.tasks.await
 
@@ -32,99 +33,31 @@ class GameSessionRepository {
     suspend fun createGameSession(
         gameSessionFirestore: GameSessionFirestore
     ): Resource<CreateGameSessionResponse> {
-//        val body = CreateGameSessionBody(boardGameId, adminId, players, teams, startingPoints)
-
         val response = APIClient.firebaseAPI.postCreateGameSession(gameSessionFirestore)
 
-        return if(response.success) {
+        return if (response.success) {
             Resource(ResourceStatus.SUCCESS, response)
         } else { //TODO Add other network error handling
             Resource(ResourceStatus.ERROR, null, ErrorType.FIREBASE_CREATE_GAME_SESSION)
         }
     }
 
-    suspend fun createGameSessionFirestore(gameSessionFirestore: GameSessionFirestore): Resource<GameSessionFirestore> {
-        val gameSessionsCollection = firestore.collection(GAME_SESSIONS_COLLECTION_PATH)
-        lateinit var result: Resource<GameSessionFirestore>
 
-        gameSessionsCollection.add(gameSessionFirestore)
-            .addOnSuccessListener {
-                gameSessionFirestore.id = it.id
-                result = Resource(ResourceStatus.SUCCESS, gameSessionFirestore)
-            }
-            .addOnFailureListener {
-                //TODO add logging logic
-                result = Resource(ResourceStatus.ERROR, gameSessionFirestore, ErrorType.UNKNOWN)
-            }
-            .await()
-
-        return result
-    }
-
-
-    suspend fun deleteGameSessionFirestore(gameSessionId: String): Resource<String> {
-        lateinit var result: Resource<String>
-
-        firestore.collection(GAME_SESSIONS_COLLECTION_PATH)
-            .document(gameSessionId)
-            .delete()
-            .addOnSuccessListener {
-                result = Resource(ResourceStatus.SUCCESS, gameSessionId)
-            }
-            .addOnFailureListener {
-                //TODO add logging logic
-                result = Resource(ResourceStatus.ERROR, gameSessionId, ErrorType.UNKNOWN)
-            }
-            .await()
-
-        return result
-    }
-
-
-    suspend fun updateGameSessionFirestore(gameSessionFirestore: GameSessionFirestore): Resource<GameSessionFirestore> {
-        lateinit var result: Resource<GameSessionFirestore>
-
-        firestore.collection(GAME_SESSIONS_COLLECTION_PATH)
-            .document(gameSessionFirestore.id)
-            .set(gameSessionFirestore)
-            .addOnSuccessListener {
-                result = Resource(ResourceStatus.SUCCESS, gameSessionFirestore)
-            }
-            .addOnFailureListener {
-                result = Resource(ResourceStatus.ERROR, gameSessionFirestore, ErrorType.UNKNOWN)
-            }
-            .await()
-
-        return result
-    }
-
-
-    suspend fun updateGameSessionFirestoreField(
+    suspend fun updateGameSession(
         gameSessionId: String,
-        fieldName: String,
-        fieldValue: Any,
-        isFieldArray: Boolean
-    ): Resource<GameSessionFirestore> {
-        lateinit var result: Resource<GameSessionFirestore>
+        gameSessionFirestore: GameSessionFirestore?,
+        gameSessionDatabase: GameSessionDatabase?
+    ): Resource<BaseFirebaseResponse> {
+        val updateGameSessionBody =
+            UpdateGameSessionBody(gameSessionId, gameSessionFirestore, gameSessionDatabase)
 
-        firestore.collection(GAME_SESSIONS_COLLECTION_PATH)
-            .document(gameSessionId)
-            .update(
-                fieldName, if (isFieldArray) {
-                    FieldValue.arrayUnion(fieldValue)
-                } else {
-                    fieldValue
-                }
-            )
-            .addOnSuccessListener {
-                result = Resource(ResourceStatus.SUCCESS, null)
-            }
-            .addOnFailureListener {
-                result = Resource(ResourceStatus.ERROR, null, ErrorType.UNKNOWN)
-            }
-            .await()
+        val response = APIClient.firebaseAPI.postUpdateGameSession(updateGameSessionBody)
 
-        return result
+        return if (response.success) {
+            Resource(ResourceStatus.SUCCESS, response)
+        } else { //TODO Add other network error handling
+            Resource(ResourceStatus.ERROR, null, ErrorType.FIRESTORE_UPDATE_GAME_SESSION)
+        }
     }
 
 

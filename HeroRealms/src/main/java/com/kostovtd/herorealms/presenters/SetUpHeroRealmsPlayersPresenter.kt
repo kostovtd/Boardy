@@ -3,24 +3,16 @@ package com.kostovtd.herorealms.presenters
 import android.util.Base64
 import com.google.gson.Gson
 import com.kostovtd.boardy.data.models.BoardGameGameSession
-import com.kostovtd.boardy.data.models.GameSessionDatabase
 import com.kostovtd.boardy.data.models.GameSessionFirestore
 import com.kostovtd.boardy.data.models.PlayerType
 import com.kostovtd.boardy.data.repositories.GameSessionRepository
 import com.kostovtd.boardy.data.repositories.IGameSessionRepository
 import com.kostovtd.boardy.data.repositories.UserRepository
 import com.kostovtd.boardy.presenters.BasePresenter
-import com.kostovtd.boardy.util.Constants.FIRESTORE_VALUE_SEPARATOR
-import com.kostovtd.boardy.util.Constants.PLAYERS_FIELD
-import com.kostovtd.boardy.util.Constants.START_TIME_FIELD
-import com.kostovtd.boardy.util.Constants.TEAMS_FIELD
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.generateQRCodeBitmap
 import com.kostovtd.herorealms.views.fragments.SetUpHeroRealmsPlayersView
 import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class SetUpHeroRealmsPlayersPresenter : BasePresenter<SetUpHeroRealmsPlayersView>(),
     IGameSessionRepository {
@@ -51,86 +43,86 @@ class SetUpHeroRealmsPlayersPresenter : BasePresenter<SetUpHeroRealmsPlayersView
 
     fun startGameSession() {
         view?.let { view ->
-            scopeIO.launch {
-                scopeMainThread.launch {
-                    view.showLoading()
-                    view.disableAllViews()
-                }
-
-                val gameSessionPoints = HashMap<String, Int>()
-                gameSessionFirestore?.teams?.forEach { team ->
-                    val id = team.split(FIRESTORE_VALUE_SEPARATOR)[0]
-                    gameSessionPoints[id] = 50
-                }
-
-                val gameSessionDatabase = GameSessionDatabase(
-                    boardGameGameSession?.gameSessionId ?: "",
-                    true,
-                    gameSessionPoints
-                )
-
-                val responseDatabase =
-                    gameSessionRepository.createGameSessionDatabase(gameSessionDatabase)
-                val isGameSessionDatabaseCreated = handleResponse(responseDatabase)
-
-                if (isGameSessionDatabaseCreated) {
-                    val responseUpdateGameSessionFirestore = gameSessionRepository.updateGameSessionFirestoreField(
-                        boardGameGameSession?.gameSessionId ?: "",
-                        START_TIME_FIELD, Date(), false)
-                    val isGameSessionFirestoreUpdated = handleResponse(responseUpdateGameSessionFirestore)
-                    if(!isGameSessionFirestoreUpdated) {
-                        handleError(responseDatabase.error)
-                    }
-                } else {
-                    handleError(responseDatabase.error)
-                }
-            }
+//            scopeIO.launch {
+//                scopeMainThread.launch {
+//                    view.showLoading()
+//                    view.disableAllViews()
+//                }
+//
+//                val gameSessionPoints = HashMap<String, Int>()
+//                gameSessionFirestore?.teams?.forEach { team ->
+//                    val id = team.split(FIRESTORE_VALUE_SEPARATOR)[0]
+//                    gameSessionPoints[id] = 50
+//                }
+//
+//                val gameSessionDatabase = GameSessionDatabase(
+//                    boardGameGameSession?.gameSessionId ?: "",
+//                    true,
+//                    gameSessionPoints
+//                )
+//
+//                val responseDatabase =
+//                    gameSessionRepository.createGameSessionDatabase(gameSessionDatabase)
+//                val isGameSessionDatabaseCreated = handleResponse(responseDatabase)
+//
+//                if (isGameSessionDatabaseCreated) {
+//                    val responseUpdateGameSessionFirestore = gameSessionRepository.updateGameSessionFirestoreField(
+//                        boardGameGameSession?.gameSessionId ?: "",
+//                        START_TIME_FIELD, Date(), false)
+//                    val isGameSessionFirestoreUpdated = handleResponse(responseUpdateGameSessionFirestore)
+//                    if(!isGameSessionFirestoreUpdated) {
+//                        handleError(responseDatabase.error)
+//                    }
+//                } else {
+//                    handleError(responseDatabase.error)
+//                }
+//            }
         }
     }
 
     fun addCurrentUserToFirestorePlayersListAndSubscribe() {
         view?.let { view ->
-            view.disableAllViews()
-            view.showLoading()
-
-            scopeIO.launch {
-                boardGameGameSession?.gameSessionId?.let { gameSessionId ->
-                    userRepository.getCurrentUser()?.let { user ->
-                        val playersArrEntry = user.uid + FIRESTORE_VALUE_SEPARATOR + user.email
-
-                        val updateGameSessionFirestorePlayersFieldResponse = gameSessionRepository.updateGameSessionFirestoreField(
-                            gameSessionId,
-                            PLAYERS_FIELD,
-                            playersArrEntry,
-                            true
-                        )
-
-                        val isFirestorePlayersFieldUpdated = handleResponse(updateGameSessionFirestorePlayersFieldResponse)
-
-                        if(isFirestorePlayersFieldUpdated) {
-                            val teamsArrEntry = user.uid + FIRESTORE_VALUE_SEPARATOR + user.email
-
-                            val updateGameSessionFirestoreTeamsFieldResponse = gameSessionRepository.updateGameSessionFirestoreField(
-                                gameSessionId,
-                                TEAMS_FIELD,
-                                teamsArrEntry,
-                                true
-                            )
-
-                            val isFirestoreTeamsFieldUpdated = handleResponse(updateGameSessionFirestoreTeamsFieldResponse)
-
-                            if(isFirestoreTeamsFieldUpdated) {
-                                subscribeGameSessionFirestore()
-                            }
-                        }
-
-                        scopeMainThread.launch {
-                            view.enableAllViews()
-                            view.hideLoading()
-                        }
-                    }
-                }
-            }
+//            view.disableAllViews()
+//            view.showLoading()
+//
+//            scopeIO.launch {
+//                boardGameGameSession?.gameSessionId?.let { gameSessionId ->
+//                    userRepository.getCurrentUser()?.let { user ->
+//                        val playersArrEntry = user.uid + FIRESTORE_VALUE_SEPARATOR + user.email
+//
+//                        val updateGameSessionFirestorePlayersFieldResponse = gameSessionRepository.updateGameSessionFirestoreField(
+//                            gameSessionId,
+//                            PLAYERS_FIELD,
+//                            playersArrEntry,
+//                            true
+//                        )
+//
+//                        val isFirestorePlayersFieldUpdated = handleResponse(updateGameSessionFirestorePlayersFieldResponse)
+//
+//                        if(isFirestorePlayersFieldUpdated) {
+//                            val teamsArrEntry = user.uid + FIRESTORE_VALUE_SEPARATOR + user.email
+//
+//                            val updateGameSessionFirestoreTeamsFieldResponse = gameSessionRepository.updateGameSessionFirestoreField(
+//                                gameSessionId,
+//                                TEAMS_FIELD,
+//                                teamsArrEntry,
+//                                true
+//                            )
+//
+//                            val isFirestoreTeamsFieldUpdated = handleResponse(updateGameSessionFirestoreTeamsFieldResponse)
+//
+//                            if(isFirestoreTeamsFieldUpdated) {
+//                                subscribeGameSessionFirestore()
+//                            }
+//                        }
+//
+//                        scopeMainThread.launch {
+//                            view.enableAllViews()
+//                            view.hideLoading()
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 

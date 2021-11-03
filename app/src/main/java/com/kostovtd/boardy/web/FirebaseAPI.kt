@@ -1,6 +1,8 @@
 package com.kostovtd.boardy.web
 
 import com.kostovtd.boardy.data.models.GameSessionFirestore
+import com.kostovtd.boardy.web.bodies.UpdateGameSessionBody
+import com.kostovtd.boardy.web.responses.BaseFirebaseResponse
 import com.kostovtd.boardy.web.responses.BoardgamesByNameResult
 import com.kostovtd.boardy.web.responses.CreateGameSessionResponse
 import retrofit2.http.Body
@@ -17,4 +19,7 @@ interface FirebaseAPI {
 
     @POST("createGameSession")
     suspend fun postCreateGameSession(@Body body: GameSessionFirestore): CreateGameSessionResponse
+
+    @POST("updateGameSession")
+    suspend fun postUpdateGameSession(@Body body: UpdateGameSessionBody): BaseFirebaseResponse
 }

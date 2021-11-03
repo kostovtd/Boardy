@@ -9,5 +9,5 @@ import com.google.firebase.database.Exclude
 class GameSessionDatabase(
     @get:Exclude var id: String = "",
     var active: Boolean = false,
-    var points: HashMap<String, Int> = HashMap()
+    @get:Exclude var points: HashMap<String, Int> = HashMap()
 )

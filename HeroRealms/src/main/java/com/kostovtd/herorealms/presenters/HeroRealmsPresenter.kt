@@ -1,49 +1,53 @@
 package com.kostovtd.herorealms.presenters
 
-import com.kostovtd.boardy.data.models.BoardGameGameSession
 import com.kostovtd.boardy.data.models.GameSessionDatabase
-import com.kostovtd.boardy.data.models.PlayerType
-import com.kostovtd.boardy.data.repositories.GameSessionRepository
 import com.kostovtd.boardy.data.repositories.IGameSessionRepository
-import com.kostovtd.boardy.data.repositories.UserRepository
 import com.kostovtd.boardy.presenters.BaseGamePresenter
+import com.kostovtd.boardy.views.activities.BaseView
 import com.kostovtd.herorealms.views.activities.HeroRealmsView
+import kotlinx.coroutines.launch
 
 /**
  * Created by tosheto on 16.02.21.
  */
 class HeroRealmsPresenter : BaseGamePresenter<HeroRealmsView>(), IGameSessionRepository {
 
-    private val gameSessionRepository = GameSessionRepository()
-    private val userRepository = UserRepository()
-    var playerType: PlayerType? = null
-    var boardGameGameSession: BoardGameGameSession? = null
-
-
-    fun subscribeHeroRealmsGameSession(gameSessionId: String) {
-        view?.let {
-            subscribeGameSession(gameSessionId)
-        }
-    }
-
-
-    fun unsubscribeHeroRealmsGameSession() {
-        view?.let {
-            unsubscribeGameSession()
-        }
-    }
-
-
     fun startHeroRealmsGameSession() {
         view?.let {
-            startGameSession()
+            scopeIO.launch {
+                val responseStartGameSession = startGameSession()
+
+                val isGameSessionStarted = handleResponse(responseStartGameSession)
+
+                if (isGameSessionStarted) {
+                    scopeMainThread.launch {
+                        (view as BaseView).hideLoading()
+                        (view as BaseView).enableAllViews()
+                    }
+                } else {
+                    handleError(responseStartGameSession.error)
+                }
+            }
         }
     }
 
 
     fun endHeroRealmsGameSession() {
         view?.let {
-            endGameSession()
+            scopeIO.launch {
+                val responseEndGameSession = endGameSession()
+
+                val isGameSessionEnded = handleResponse(responseEndGameSession)
+
+                if (isGameSessionEnded) {
+                    scopeMainThread.launch {
+                        (view as BaseView).hideLoading()
+                        (view as BaseView).enableAllViews()
+                    }
+                } else {
+                    handleError(responseEndGameSession.error)
+                }
+            }
         }
     }
 
