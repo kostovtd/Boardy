@@ -1,12 +1,12 @@
 package com.kostovtd.boardy.presenters
 
-import com.google.firebase.Timestamp
 import com.kostovtd.boardy.data.models.*
 import com.kostovtd.boardy.data.repositories.*
 import com.kostovtd.boardy.util.Constants
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.web.responses.BaseFirebaseResponse
 import com.kostovtd.boardy.web.responses.GameSessionByIdResult
+import java.util.*
 
 open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
 
@@ -22,7 +22,7 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     suspend fun startGameSession(): Resource<BaseFirebaseResponse> {
         view?.let {
             boardGameGameSession?.gameSessionId?.let { gameSessionId ->
-                gameSessionFirestore?.startTime = Timestamp.now()
+                gameSessionFirestore?.startTime = Date().time
                 gameSessionDatabase?.active = true
 
                 return gameSessionRepository.updateGameSession(
@@ -57,7 +57,7 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     suspend fun endGameSession(): Resource<BaseFirebaseResponse> {
         view?.let {
             boardGameGameSession?.gameSessionId?.let { gameSessionId ->
-                gameSessionFirestore?.endTime = Timestamp.now()
+                gameSessionFirestore?.endTime = Date().time
                 gameSessionDatabase?.active = false
 
                 return gameSessionRepository.updateGameSession(
@@ -93,11 +93,19 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     suspend fun addPlayerToGameSession(
         userId: String,
         userEmail: String,
-        points: Int
+        points: Int,
+        team: String = userId + Constants.FIRESTORE_VALUE_SEPARATOR + userEmail
     ): Resource<BaseFirebaseResponse> {
         view?.let {
             val playerEntryFirestore = userId + Constants.FIRESTORE_VALUE_SEPARATOR + userEmail
-            gameSessionFirestore?.players?.add(playerEntryFirestore)
+
+            if(gameSessionFirestore?.players?.contains(playerEntryFirestore) == false) {
+                gameSessionFirestore?.players?.add(playerEntryFirestore)
+            }
+
+            if(gameSessionFirestore?.teams?.contains(team) == false) {
+                gameSessionFirestore?.teams?.add(team)
+            }
 
             gameSessionDatabase?.points?.set(userId, points)
 
@@ -116,15 +124,6 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
 
     fun removePlayerFromGameSession() {
 
-    }
-
-
-    fun isUserInGameSession(
-        userId: String,
-        userEmail: String
-    ): Boolean {
-        val playerEntryFirestore = userId + Constants.FIRESTORE_VALUE_SEPARATOR + userEmail
-        return gameSessionFirestore?.players?.contains(playerEntryFirestore) == true
     }
 
 

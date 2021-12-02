@@ -35,9 +35,13 @@ class HeroRealmsGamePresenter: BaseGamePresenter<HeroRealmsGameView>(), IGameSes
         view?.let { view ->
             view.updateGameSessionInfo(gameSessionFirestore)
 
-            if(gameSessionFirestore.endTime?.toDate()?.after(gameSessionFirestore.startTime?.toDate()) == true) {
+            gameSessionFirestore.endTime?.let { endTime ->
+                gameSessionFirestore.startTime?.let { startTime ->
+                    if(endTime > startTime) {
 //                gameSessionRepository.unsubscribeGameSessionFirestore()
-                view.finishActivity()
+                        view.finishActivity()
+                    }
+                }
             }
         }
     }

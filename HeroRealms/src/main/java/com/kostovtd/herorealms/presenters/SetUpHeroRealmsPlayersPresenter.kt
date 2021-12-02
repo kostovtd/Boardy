@@ -74,14 +74,6 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
                             val isGameSessionFetched = handleResponse(getGameSessionByIdResponse)
 
                             if (isGameSessionFetched) {
-                                if(isUserInGameSession(userId, userEmail)) {
-                                    scopeMainThread.launch {
-                                        view.enableAllViews()
-                                        view.hideLoading()
-                                    }
-                                    return@launch
-                                }
-
                                 val updateGameSessionResponse =
                                     addPlayerToGameSession(userId, userEmail, 50)
                                 val isGameSessionUpdated = handleResponse(updateGameSessionResponse)
@@ -118,15 +110,20 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
                 PlayerType.ADMIN -> {
                     if (gameSessionFirestore.players.size == 2) {
                         it.enableStartGame()
+                    } else {
+
                     }
                 }
                 PlayerType.PLAYER -> {
-                    if (gameSessionFirestore.startTime?.toDate()
-                            ?.after(gameSessionFirestore.endTime?.toDate()) == true
-                    ) {
-                        it.startHeroRealmsGameFragmentAsPlayer()
+                    gameSessionFirestore.startTime?.let { startTime ->
+                        gameSessionFirestore.endTime?.let { endTime ->
+                            if (startTime > endTime) {
+                                it.startHeroRealmsGameFragmentAsPlayer()
+                            }
+                        }
                     }
                 }
+                else -> {}
             }
         }
     }
