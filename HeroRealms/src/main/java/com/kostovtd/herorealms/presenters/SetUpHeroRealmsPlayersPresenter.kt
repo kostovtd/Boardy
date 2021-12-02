@@ -6,7 +6,6 @@ import com.kostovtd.boardy.data.models.GameSessionFirestore
 import com.kostovtd.boardy.data.models.PlayerType
 import com.kostovtd.boardy.data.repositories.IGameSessionRepository
 import com.kostovtd.boardy.presenters.BaseGamePresenter
-import com.kostovtd.boardy.util.Constants.FIRESTORE_VALUE_SEPARATOR
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.generateQRCodeBitmap
 import com.kostovtd.herorealms.views.fragments.SetUpHeroRealmsPlayersView
@@ -42,17 +41,14 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
                     view.disableAllViews()
                 }
 
-                val gameSessionPoints = HashMap<String, Int>()
-                gameSessionFirestore?.teams?.forEach { team ->
-                    val id = team.split(FIRESTORE_VALUE_SEPARATOR)[0]
-                    gameSessionPoints[id] = 50
-                }
-
                 val responseStartGameSession = startGameSession()
                 val isGameSessionStartedSuccessfully = handleResponse(responseStartGameSession)
 
                 if (isGameSessionStartedSuccessfully) {
-                    view.startHeroRealmsGameFragmentAsAdmin()
+                    scopeMainThread.launch {
+                        view.hideLoading()
+                        view.enableAllViews()
+                    }
                 } else {
                     handleError(responseStartGameSession.error)
                 }
@@ -98,32 +94,30 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
 
 
     override fun onGameSessionFirestoreUpdated(gameSessionFirestore: GameSessionFirestore) {
-        view?.let {
-            this.gameSessionFirestore = gameSessionFirestore
+        super<BaseGamePresenter>.onGameSessionFirestoreUpdated(gameSessionFirestore)
 
+        view?.let {
             it.showPlayers(
                 ArrayList(gameSessionFirestore.players),
                 gameSessionFirestore.adminId
             )
 
-            when (playerType) {
-                PlayerType.ADMIN -> {
-                    if (gameSessionFirestore.players.size == 2) {
-                        it.enableStartGame()
-                    } else {
-
-                    }
+            if(playerType == PlayerType.ADMIN) {
+                if (gameSessionFirestore.players.size == 2) {
+                    it.enableStartGame()
                 }
-                PlayerType.PLAYER -> {
-                    gameSessionFirestore.startTime?.let { startTime ->
-                        gameSessionFirestore.endTime?.let { endTime ->
-                            if (startTime > endTime) {
-                                it.startHeroRealmsGameFragmentAsPlayer()
-                            }
+            }
+
+            gameSessionFirestore.startTime?.let { startTime ->
+                gameSessionFirestore.endTime?.let { endTime ->
+                    if (startTime > endTime) {
+                        if(playerType == PlayerType.ADMIN) {
+                            it.startHeroRealmsGameFragmentAsAdmin()
+                        } else {
+                            it.startHeroRealmsGameFragmentAsPlayer()
                         }
                     }
                 }
-                else -> {}
             }
         }
     }
