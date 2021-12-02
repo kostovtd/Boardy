@@ -17,6 +17,7 @@ import com.kostovtd.boardy.web.APIClient
 import com.kostovtd.boardy.web.bodies.UpdateGameSessionBody
 import com.kostovtd.boardy.web.responses.BaseFirebaseResponse
 import com.kostovtd.boardy.web.responses.CreateGameSessionResponse
+import com.kostovtd.boardy.web.responses.GameSessionByIdResult
 
 /**
  * Created by tosheto on 16.02.21.
@@ -38,6 +39,17 @@ class GameSessionRepository {
             Resource(ResourceStatus.SUCCESS, response)
         } else { //TODO Add other network error handling
             Resource(ResourceStatus.ERROR, null, ErrorType.FIREBASE_CREATE_GAME_SESSION)
+        }
+    }
+
+
+    suspend fun getGameSessionById(gameSessionId: String): Resource<GameSessionByIdResult> {
+        val response = APIClient.firebaseAPI.getGameSessionById(gameSessionId)
+
+        return if (response.success) {
+            Resource(ResourceStatus.SUCCESS, response)
+        } else {
+            Resource(ResourceStatus.ERROR, null, ErrorType.FIREBASE_GET_GAME_SESSION_BY_ID)
         }
     }
 
@@ -71,6 +83,7 @@ class GameSessionRepository {
 
                 if (snapshot != null && snapshot.exists()) {
                     snapshot.toObject(GameSessionFirestore::class.java)?.let {
+                        it.id = gameSessionId
                         listener.onGameSessionFirestoreUpdated(it)
                     }
                 } else {
@@ -92,6 +105,7 @@ class GameSessionRepository {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val gameSessionDatabase = dataSnapshot.getValue<GameSessionDatabase>()
                 gameSessionDatabase?.let { gameSession ->
+                    gameSession.id = gameSessionId
                     listener.onGameSessionDatabaseUpdated(gameSession)
                 }
             }

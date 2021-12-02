@@ -44,18 +44,15 @@ class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_pl
             setUpViewsByPlayerType(it)
             presenter.generateQRCode()
 
-            when(it) {
-                PlayerType.ADMIN ->{
-                    presenter.subscribeGameSessionFirestore()
-                }
-                PlayerType.PLAYER -> {
-                    presenter.addCurrentUserToFirestorePlayersListAndSubscribe()
-                }
+            if(presenter.playerType == PlayerType.PLAYER) {
+                presenter.getGameSessionByIdAndAddCurrentUserToGameSession()
             }
+
+            presenter.subscribeGameSession()
         }
 
         startGame.setOnClickListener {
-            presenter.startGameSession()
+            presenter.startHeroRealmsGameSession()
         }
     }
 

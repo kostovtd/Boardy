@@ -4,7 +4,6 @@ import com.kostovtd.boardy.data.models.GameSessionDatabase
 import com.kostovtd.boardy.data.models.GameSessionFirestore
 import com.kostovtd.boardy.data.models.PlayerType
 import com.kostovtd.boardy.data.repositories.IGameSessionRepository
-import com.kostovtd.boardy.data.repositories.UserRepository
 import com.kostovtd.boardy.presenters.BaseGamePresenter
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.views.activities.BaseView
@@ -15,14 +14,10 @@ class HeroRealmsGamePresenter: BaseGamePresenter<HeroRealmsGameView>(), IGameSes
 
     var gameSessionId: String? = null
 
-    private val userRepository = UserRepository()
-
 
     fun subscribeToGameSession() {
         view?.let {
-            gameSessionId?.let { gameSessionId ->
-                subscribeGameSession(gameSessionId)
-            }
+            subscribeGameSession()
         }
     }
 

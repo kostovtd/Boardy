@@ -5,6 +5,7 @@ import com.kostovtd.boardy.web.bodies.UpdateGameSessionBody
 import com.kostovtd.boardy.web.responses.BaseFirebaseResponse
 import com.kostovtd.boardy.web.responses.BoardgamesByNameResult
 import com.kostovtd.boardy.web.responses.CreateGameSessionResponse
+import com.kostovtd.boardy.web.responses.GameSessionByIdResult
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -16,6 +17,9 @@ interface FirebaseAPI {
 
     @GET("getBoardgamesByName")
     suspend fun getBoardGameByName(@Query("name") name: String): BoardgamesByNameResult
+
+    @GET("getGameSessionById")
+    suspend fun getGameSessionById(@Query("id") id: String): GameSessionByIdResult
 
     @POST("createGameSession")
     suspend fun postCreateGameSession(@Body body: GameSessionFirestore): CreateGameSessionResponse

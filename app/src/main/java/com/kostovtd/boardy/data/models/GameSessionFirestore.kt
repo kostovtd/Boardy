@@ -13,8 +13,8 @@ class GameSessionFirestore(
     @get:Exclude var id: String = "",
     var adminId: String = "",
     var boardGameId: String = "",
-    @ServerTimestamp var startTime: Timestamp?,
-    @ServerTimestamp var endTime: Timestamp?,
+    @ServerTimestamp var startTime: Timestamp? = null,
+    @ServerTimestamp var endTime: Timestamp? = null,
     var startingPoints: Int = 0,
     var players: ArrayList<String> = ArrayList(), // data format {userId}|{userName}
     var teams: ArrayList<String> = ArrayList(), // data format {userId}|{userName}
