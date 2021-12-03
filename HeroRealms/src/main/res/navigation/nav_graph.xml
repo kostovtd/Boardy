@@ -48,7 +48,7 @@
             android:name="playerType"
             app:argType="com.kostovtd.boardy.data.models.PlayerType" />
         <argument
-            android:name="gameSessionId"
-            app:argType="string" />
+            android:name="boardGameGameSession"
+            app:argType="com.kostovtd.boardy.data.models.BoardGameGameSession" />
     </fragment>
 </navigation>

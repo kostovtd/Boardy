@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.kostovtd.boardy.data.models.BoardGameGameSession
 import com.kostovtd.boardy.data.models.GameSessionFirestore
 import com.kostovtd.boardy.data.models.PlayerType
 import com.kostovtd.boardy.util.Constants
@@ -26,8 +27,8 @@ class HeroRealmsGameFragment : Fragment(R.layout.fragment_hero_realms_game), Her
             presenter.playerType = it as PlayerType
         }
 
-        arguments?.getSerializable(Constants.GAME_SESSION_ID_KEY).let {
-            presenter.gameSessionId = it as String
+        arguments?.getSerializable(Constants.BOARD_GAME_GAME_SESSION_KEY).let {
+            presenter.boardGameGameSession = it as BoardGameGameSession
         }
     }
 

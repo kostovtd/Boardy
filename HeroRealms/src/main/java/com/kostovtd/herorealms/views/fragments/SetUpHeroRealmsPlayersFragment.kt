@@ -97,18 +97,20 @@ class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_pl
 
 
     override fun startHeroRealmsGameFragmentAsAdmin() {
-        val action = SetUpHeroRealmsPlayersFragmentDirections
-            .actionSetUpHeroRealmsPlayersFragmentToHeroRealmsGameFragment(PlayerType.ADMIN,
-                presenter.boardGameGameSession?.gameSessionId ?: "")
-        findNavController().navigate(action)
+        presenter.boardGameGameSession?.let { boardGameGameSession ->
+            val action = SetUpHeroRealmsPlayersFragmentDirections
+                .actionSetUpHeroRealmsPlayersFragmentToHeroRealmsGameFragment(PlayerType.ADMIN, boardGameGameSession)
+            findNavController().navigate(action)
+        }
     }
 
 
     override fun startHeroRealmsGameFragmentAsPlayer() {
-        val action = SetUpHeroRealmsPlayersFragmentDirections
-            .actionSetUpHeroRealmsPlayersFragmentToHeroRealmsGameFragment(PlayerType.PLAYER,
-                presenter.boardGameGameSession?.gameSessionId ?: "")
-        findNavController().navigate(action)
+        presenter.boardGameGameSession?.let { boardGameGameSession ->
+            val action = SetUpHeroRealmsPlayersFragmentDirections
+                .actionSetUpHeroRealmsPlayersFragmentToHeroRealmsGameFragment(PlayerType.PLAYER, boardGameGameSession)
+            findNavController().navigate(action)
+        }
     }
 
 
