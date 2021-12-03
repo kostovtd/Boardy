@@ -6,6 +6,7 @@ import com.kostovtd.boardy.data.models.GameSessionFirestore
 import com.kostovtd.boardy.data.models.PlayerType
 import com.kostovtd.boardy.data.repositories.IGameSessionRepository
 import com.kostovtd.boardy.presenters.BaseGamePresenter
+import com.kostovtd.boardy.util.Constants
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.generateQRCodeBitmap
 import com.kostovtd.herorealms.views.fragments.SetUpHeroRealmsPlayersView
@@ -59,8 +60,8 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
 
     fun getGameSessionByIdAndAddCurrentUserToGameSession() {
         view?.let { view ->
-            userRepository.getCurrentUser()?.uid?.let { userId ->
-                userRepository.getCurrentUser()?.email?.let { userEmail ->
+            getCurrentUserId()?.let { userId ->
+                getCurrentUserEmail()?.let { userEmail ->
                     boardGameGameSession?.gameSessionId?.let { gameSessionId ->
                         view.disableAllViews()
                         view.showLoading()
@@ -75,6 +76,8 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
                                 val isGameSessionUpdated = handleResponse(updateGameSessionResponse)
 
                                 if (isGameSessionUpdated) {
+                                    subscribeGameSession()
+
                                     scopeMainThread.launch {
                                         view.enableAllViews()
                                         view.hideLoading()
@@ -93,13 +96,47 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
     }
 
 
+    fun removePlayerFromHeroRealmsGameSession(playerData: String?) {
+        view?.let { view ->
+            playerData?.let { playerData ->
+                view.disableAllViews()
+                view.showLoading()
+
+                scopeIO.launch {
+                    val removePlayerResponse = removePlayerFromGameSession(playerData)
+                    val isPlayerRemoved = handleResponse(removePlayerResponse)
+
+                    if(isPlayerRemoved) {
+                        scopeMainThread.launch {
+                            view.enableAllViews()
+                            view.hideLoading()
+                        }
+                    } else {
+                        handleError(removePlayerResponse.error)
+                    }
+                }
+            }
+        }
+    }
+
+
     override fun onGameSessionFirestoreUpdated(gameSessionFirestore: GameSessionFirestore) {
         super<BaseGamePresenter>.onGameSessionFirestoreUpdated(gameSessionFirestore)
 
         view?.let {
+            val userData =
+                getCurrentUserId() + Constants.FIRESTORE_VALUE_SEPARATOR + getCurrentUserEmail()
+
+            if (!gameSessionFirestore.players.contains(userData)) {
+                unsubscribeGameSession()
+                it.finishActivity()
+                return
+            }
+
             it.showPlayers(
                 ArrayList(gameSessionFirestore.players),
-                gameSessionFirestore.adminId
+                gameSessionFirestore.adminId,
+                getCurrentUserId() ?: ""
             )
 
             if(playerType == PlayerType.ADMIN) {

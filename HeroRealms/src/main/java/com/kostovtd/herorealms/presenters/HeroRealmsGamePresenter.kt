@@ -28,9 +28,6 @@ class HeroRealmsGamePresenter: BaseGamePresenter<HeroRealmsGameView>(), IGameSes
     }
 
 
-    fun getCurrentUserId(): String? = userRepository.getCurrentUser()?.uid
-
-
     override fun onGameSessionFirestoreUpdated(gameSessionFirestore: GameSessionFirestore) {
         view?.let { view ->
             view.updateGameSessionInfo(gameSessionFirestore)

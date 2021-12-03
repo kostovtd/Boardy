@@ -17,13 +17,26 @@
 
     <TextView
         android:id="@+id/playerName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
         tools:text="@string/not_available"
         app:layout_constraintTop_toTopOf="@id/icPlayer"
         app:layout_constraintBottom_toBottomOf="@id/icPlayer"
-        app:layout_constraintStart_toEndOf="@id/icPlayer" />
+        app:layout_constraintStart_toEndOf="@id/icPlayer"
+        app:layout_constraintEnd_toStartOf="@id/removePlayer"/>
 
-
+    <ImageView
+        android:id="@+id/removePlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_delete_24"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="24dp"
+        android:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

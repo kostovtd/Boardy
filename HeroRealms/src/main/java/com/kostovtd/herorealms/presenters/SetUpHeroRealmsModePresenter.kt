@@ -3,7 +3,6 @@ package com.kostovtd.herorealms.presenters
 import com.kostovtd.boardy.data.models.BoardGameGameSession
 import com.kostovtd.boardy.data.models.GameSessionFirestore
 import com.kostovtd.boardy.data.repositories.GameSessionRepository
-import com.kostovtd.boardy.data.repositories.UserRepository
 import com.kostovtd.boardy.presenters.BasePresenter
 import com.kostovtd.boardy.util.Constants
 import com.kostovtd.herorealms.views.fragments.SetUpHeroRealmsModeView
@@ -13,22 +12,21 @@ import kotlin.collections.ArrayList
 
 class SetUpHeroRealmsModePresenter : BasePresenter<SetUpHeroRealmsModeView>() {
 
-    private val userRepository = UserRepository()
     private val gameSessionRepository = GameSessionRepository()
     var boardGameGameSession: BoardGameGameSession? = null
 
 
     fun createHeroRealmsGameSession() {
         view?.let { view ->
-            val adminId = userRepository.getCurrentUser()?.uid ?: ""
+            val adminId = getCurrentUserId() ?: ""
             val endTime = Date().time
             val losers = ArrayList<String>()
 
-            val playerArrEntry = (userRepository.getCurrentUser()?.uid ?: "") +
+            val playerArrEntry = adminId +
                     Constants.FIRESTORE_VALUE_SEPARATOR + userRepository.getCurrentUser()?.email
             val players = arrayListOf(playerArrEntry)
 
-            val teamArrEntry = (userRepository.getCurrentUser()?.uid ?: "") +
+            val teamArrEntry = adminId +
                     Constants.FIRESTORE_VALUE_SEPARATOR + userRepository.getCurrentUser()?.email
             val teams = arrayListOf(teamArrEntry)
 

@@ -82,9 +82,11 @@ class GameSessionRepository {
                 }
 
                 if (snapshot != null && snapshot.exists()) {
-                    snapshot.toObject(GameSessionFirestore::class.java)?.let {
-                        it.id = gameSessionId
-                        listener.onGameSessionFirestoreUpdated(it)
+                    if(!snapshot.metadata.isFromCache) {
+                        snapshot.toObject(GameSessionFirestore::class.java)?.let {
+                            it.id = gameSessionId
+                            listener.onGameSessionFirestoreUpdated(it)
+                        }
                     }
                 } else {
                     //TODO add logging logic

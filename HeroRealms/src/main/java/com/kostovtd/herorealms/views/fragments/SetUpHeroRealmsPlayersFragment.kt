@@ -12,12 +12,13 @@ import com.kostovtd.boardy.data.models.BoardGameGameSession
 import com.kostovtd.boardy.data.models.PlayerType
 import com.kostovtd.boardy.util.Constants
 import com.kostovtd.herorealms.R
+import com.kostovtd.herorealms.adapters.IPlayersListener
 import com.kostovtd.herorealms.adapters.PlayersAdapter
 import com.kostovtd.herorealms.presenters.SetUpHeroRealmsPlayersPresenter
 import kotlinx.android.synthetic.main.fragment_hero_realms_players.*
 
 class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_players),
-    SetUpHeroRealmsPlayersView {
+    SetUpHeroRealmsPlayersView, IPlayersListener {
 
     private val presenter = SetUpHeroRealmsPlayersPresenter()
     private var adapter: PlayersAdapter? = null
@@ -46,9 +47,9 @@ class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_pl
 
             if(presenter.playerType == PlayerType.PLAYER) {
                 presenter.getGameSessionByIdAndAddCurrentUserToGameSession()
+            } else {
+                presenter.subscribeGameSession()
             }
-
-            presenter.subscribeGameSession()
         }
 
         startGame.setOnClickListener {
@@ -62,15 +63,29 @@ class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_pl
     }
 
 
-    override fun showPlayers(names: ArrayList<String>, adminId: String) {
+    override fun onDestroy() {
+        presenter.unsubscribeGameSession()
+        super.onDestroy()
+    }
+
+
+    override fun finishActivity() {
+        activity?.finish()
+    }
+
+
+    override fun showPlayers(names: ArrayList<String>, adminId: String, currentPlayerId: String) {
         adapter?.let {
             it.data = names
             it.adminId = adminId
+            it.currentPlayerId = currentPlayerId
             it.notifyDataSetChanged()
         } ?: run {
             adapter = context?.let { PlayersAdapter(it) }
             adapter?.data = names
             adapter?.adminId = adminId
+            adapter?.currentPlayerId = currentPlayerId
+            adapter?.listener = this
             playersList.adapter = adapter
         }
     }
@@ -95,7 +110,6 @@ class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_pl
         startGame.isEnabled = false
     }
 
-
     override fun startHeroRealmsGameFragmentAsAdmin() {
         presenter.boardGameGameSession?.let { boardGameGameSession ->
             val action = SetUpHeroRealmsPlayersFragmentDirections
@@ -111,6 +125,11 @@ class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_pl
                 .actionSetUpHeroRealmsPlayersFragmentToHeroRealmsGameFragment(PlayerType.PLAYER, boardGameGameSession)
             findNavController().navigate(action)
         }
+    }
+
+
+    override fun onRemovePlayerSelected(playerData: String) {
+        presenter.removePlayerFromHeroRealmsGameSession(playerData)
     }
 
 

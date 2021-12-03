@@ -7,7 +7,6 @@ import com.kostovtd.boardy.data.models.PlayerType
 import com.kostovtd.boardy.data.repositories.BoardGamesRepository
 import com.kostovtd.boardy.data.repositories.GameSessionRepository
 import com.kostovtd.boardy.data.repositories.ResourceStatus
-import com.kostovtd.boardy.data.repositories.UserRepository
 import com.kostovtd.boardy.util.DynamicModuleListener
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.startBoardGameModuleAs
@@ -19,7 +18,6 @@ import kotlinx.coroutines.launch
  */
 class MainPresenter : BasePresenter<MainView>(), DynamicModuleListener {
 
-    private val userRepository = UserRepository()
     private val boardGamesRepository = BoardGamesRepository()
     private val gameSessionRepository = GameSessionRepository()
 //    private val dynamicModuleHandler = DynamicModuleHandler(this)

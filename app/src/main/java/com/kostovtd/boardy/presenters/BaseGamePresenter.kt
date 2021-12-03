@@ -1,7 +1,10 @@
 package com.kostovtd.boardy.presenters
 
 import com.kostovtd.boardy.data.models.*
-import com.kostovtd.boardy.data.repositories.*
+import com.kostovtd.boardy.data.repositories.GameSessionRepository
+import com.kostovtd.boardy.data.repositories.IGameSessionRepository
+import com.kostovtd.boardy.data.repositories.Resource
+import com.kostovtd.boardy.data.repositories.ResourceStatus
 import com.kostovtd.boardy.util.Constants
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.web.responses.BaseFirebaseResponse
@@ -11,7 +14,6 @@ import java.util.*
 open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
 
     private val gameSessionRepository = GameSessionRepository()
-    val userRepository = UserRepository()
     var gameSessionFirestore: GameSessionFirestore? = null
     var gameSessionDatabase: GameSessionDatabase? = null
     var boardGame: BoardGame? = null
@@ -99,11 +101,11 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
         view?.let {
             val playerEntryFirestore = userId + Constants.FIRESTORE_VALUE_SEPARATOR + userEmail
 
-            if(gameSessionFirestore?.players?.contains(playerEntryFirestore) == false) {
+            if (gameSessionFirestore?.players?.contains(playerEntryFirestore) == false) {
                 gameSessionFirestore?.players?.add(playerEntryFirestore)
             }
 
-            if(gameSessionFirestore?.teams?.contains(team) == false) {
+            if (gameSessionFirestore?.teams?.contains(team) == false) {
                 gameSessionFirestore?.teams?.add(team)
             }
 
@@ -122,8 +124,22 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     }
 
 
-    fun removePlayerFromGameSession() {
+    suspend fun removePlayerFromGameSession(playerData: String): Resource<BaseFirebaseResponse> {
+        view?.let {
+            gameSessionFirestore?.players?.remove(playerData)
+            gameSessionFirestore?.teams?.remove(playerData)
+            gameSessionDatabase?.points?.remove(playerData.split(Constants.FIRESTORE_VALUE_SEPARATOR)[0])
 
+            boardGameGameSession?.gameSessionId?.let { gameSessionId ->
+                return gameSessionRepository.updateGameSession(
+                    gameSessionId,
+                    gameSessionFirestore,
+                    gameSessionDatabase
+                )
+            }
+        } ?: run {
+            return Resource(ResourceStatus.ERROR, null)
+        }
     }
 
 

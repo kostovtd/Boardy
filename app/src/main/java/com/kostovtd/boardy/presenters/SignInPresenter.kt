@@ -1,17 +1,14 @@
 package com.kostovtd.boardy.presenters
 
-import com.kostovtd.boardy.data.repositories.UserRepository
-import com.kostovtd.boardy.views.activities.SignInView
 import com.kostovtd.boardy.data.repositories.ResourceStatus
 import com.kostovtd.boardy.util.ErrorType
+import com.kostovtd.boardy.views.activities.SignInView
 import kotlinx.coroutines.async
 
 /**
  * Created by tosheto on 17.11.20.
  */
 class SignInPresenter : BasePresenter<SignInView>() {
-
-    private val userRepository = UserRepository()
 
 
     fun signInWithEmailAndPassword(email: String, password: String) {

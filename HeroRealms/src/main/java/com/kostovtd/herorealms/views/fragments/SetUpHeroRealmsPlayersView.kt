@@ -5,7 +5,7 @@ import com.kostovtd.boardy.views.activities.BaseView
 
 interface SetUpHeroRealmsPlayersView: BaseView {
     fun showQRcode(qrBitmap: Bitmap)
-    fun showPlayers(names: ArrayList<String>, adminId: String)
+    fun showPlayers(names: ArrayList<String>, adminId: String, currentPlayerId: String)
     fun enableStartGame()
     fun disableStartGame()
     fun startHeroRealmsGameFragmentAsAdmin()

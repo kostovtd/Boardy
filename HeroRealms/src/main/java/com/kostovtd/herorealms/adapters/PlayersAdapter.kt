@@ -16,6 +16,7 @@ class PlayersAdapter(private val context: Context) : RecyclerView.Adapter<Player
     var listener: IPlayersListener? = null
     var data: ArrayList<String>? = null
     var adminId: String? = null
+    var currentPlayerId: String? = null
 
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
@@ -25,11 +26,7 @@ class PlayersAdapter(private val context: Context) : RecyclerView.Adapter<Player
 
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val playerData = data?.get(position)?.split(Constants.FIRESTORE_VALUE_SEPARATOR)
-        val playerName = playerData?.get(1) ?: context.getString(R.string.not_available)
-        val playerId = playerData?.get(0) ?: ""
-        val isAdmin = playerId == adminId
-        return viewHolder.bind(context, playerName, isAdmin, listener)
+        return viewHolder.bind(context, data?.get(position), adminId, currentPlayerId, listener)
     }
 
 
@@ -40,18 +37,30 @@ class PlayersAdapter(private val context: Context) : RecyclerView.Adapter<Player
 
         private var rootView = view
 
-        fun bind(context: Context, playerName: String, isAdmin: Boolean, listener: IPlayersListener?) {
-            rootView.playerName.text = playerName
+        fun bind(context: Context, itemData: String?, adminId: String?, currentPlayerId: String?, listener: IPlayersListener?) {
+            val playerItemData = itemData?.split(Constants.FIRESTORE_VALUE_SEPARATOR)
+            val playerItemName = playerItemData?.get(1) ?: context.getString(R.string.not_available)
+            val playerItemId = playerItemData?.get(0) ?: ""
+            val isItemAdmin = playerItemId == adminId
+            val isCurrentUserAdmin = adminId == currentPlayerId
 
-            val icPlayerDrawable = if(isAdmin) {
+            rootView.playerName.text = playerItemName
+
+            val icPlayerDrawable = if(isItemAdmin) {
                 ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_24)
             } else {
                 ContextCompat.getDrawable(context, R.drawable.ic_baseline_account_circle_24)
             }
 
+            if(isCurrentUserAdmin && !isItemAdmin) {
+                rootView.removePlayer.visibility = View.VISIBLE
+            } else {
+                rootView.removePlayer.visibility = View.GONE
+            }
+
             rootView.icPlayer.setImageDrawable(icPlayerDrawable)
 
-            rootView.setOnClickListener { listener?.onPlayerSelected(playerName) }
+            rootView.removePlayer.setOnClickListener { listener?.onRemovePlayerSelected(itemData ?: "") }
         }
     }
 }
