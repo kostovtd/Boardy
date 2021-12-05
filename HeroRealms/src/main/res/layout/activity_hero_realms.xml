@@ -48,7 +48,7 @@
             style="@android:style/Widget.Material.Light.ProgressBar.Inverse"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/rounded_background_pickled_bluewood_50t"
+            android:background="@drawable/rounded_background_pickled_bluewood_50t_solid"
             android:indeterminate="true"
             android:indeterminateTint="@color/pastel_green"
             android:max="100"

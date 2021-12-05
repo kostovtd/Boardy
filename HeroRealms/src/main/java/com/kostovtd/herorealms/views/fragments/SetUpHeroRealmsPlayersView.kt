@@ -10,4 +10,5 @@ interface SetUpHeroRealmsPlayersView: BaseView {
     fun disableStartGame()
     fun startHeroRealmsGameFragmentAsAdmin()
     fun startHeroRealmsGameFragmentAsPlayer()
+    fun onCurrentPlayerRemovedFromGameSession()
 }

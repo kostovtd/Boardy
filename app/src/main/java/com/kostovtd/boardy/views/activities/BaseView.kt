@@ -17,6 +17,10 @@ interface BaseView {
     fun showError(errorType: ErrorType) {}
     fun showSuccess(successType: SuccessType) {}
     fun showInfo(infoType: InfoType) {}
+    fun showConfirmationDialog(title: String, description: String, positiveCallback: () -> Unit) {}
+    fun showConfirmationDialog(titleResourceId: Int, descriptionResourceId: Int, positiveCallback: () -> Unit) {}
+    fun showInformationDialog(title: String, description: String, callback: () -> Unit) {}
+    fun showInformationDialog(titleResourceId: Int, descriptionResourceId: String, callback: () -> Unit) {}
     fun finishActivity() {}
     fun disableAllViews() {}
     fun enableAllViews() {}

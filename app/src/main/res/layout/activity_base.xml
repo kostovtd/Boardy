@@ -37,7 +37,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:indeterminate="true"
-            android:background="@drawable/rounded_background_pickled_bluewood_50t"
+            android:background="@drawable/rounded_background_pickled_bluewood_50t_solid"
             android:indeterminateTint="@color/pastel_green"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar"

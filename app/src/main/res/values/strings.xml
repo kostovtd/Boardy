@@ -14,6 +14,14 @@
     <string name="last_name_optional">Last Name (optional)</string>
     <string name="scanning_code">Scanning code</string>
     <string name="not_available">N/A</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="got_it">Got it</string>
+    <string name="psst">Pssst…</string>
+    <string name="are_you_sure">You sure?</string>
+    <string name="about_to_kick_out_player">You are about to kick out %s</string>
+    <string name="you_were_kicked_out_game_session">You were kicked out of this game session</string>
 
     <!-- ERROR MESSAGES -->
     <string name="something_went_wrong">Someting went wrong. Please, try again!</string>

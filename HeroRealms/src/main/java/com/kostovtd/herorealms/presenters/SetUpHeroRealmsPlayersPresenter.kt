@@ -110,6 +110,10 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
                         scopeMainThread.launch {
                             view.enableAllViews()
                             view.hideLoading()
+
+                            if(gameSessionFirestore?.players?.size ?: 0 < 2) {
+                                view.disableStartGame()
+                            }
                         }
                     } else {
                         handleError(removePlayerResponse.error)
@@ -128,8 +132,7 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
                 getCurrentUserId() + Constants.FIRESTORE_VALUE_SEPARATOR + getCurrentUserEmail()
 
             if (!gameSessionFirestore.players.contains(userData)) {
-                unsubscribeGameSession()
-                it.finishActivity()
+                it.onCurrentPlayerRemovedFromGameSession()
                 return
             }
 

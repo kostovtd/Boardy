@@ -80,7 +80,8 @@ dependencies {
     api "androidx.navigation:navigation-dynamic-features-fragment:2.3.5"
     api "androidx.navigation:navigation-compose:2.4.0-alpha10"
 
-
+    // Animations
+    api "com.airbnb.android:lottie:4.2.2"
 
     // Tests
     testImplementation 'junit:junit:4.13.1'

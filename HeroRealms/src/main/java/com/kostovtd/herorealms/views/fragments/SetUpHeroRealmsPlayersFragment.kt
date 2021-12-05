@@ -11,11 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kostovtd.boardy.data.models.BoardGameGameSession
 import com.kostovtd.boardy.data.models.PlayerType
 import com.kostovtd.boardy.util.Constants
+import com.kostovtd.boardy.views.customViews.AnimatedConfirmationDialog
+import com.kostovtd.boardy.views.customViews.AnimatedInformationDialog
+import com.kostovtd.boardy.views.customViews.AnimationType
 import com.kostovtd.herorealms.R
 import com.kostovtd.herorealms.adapters.IPlayersListener
 import com.kostovtd.herorealms.adapters.PlayersAdapter
 import com.kostovtd.herorealms.presenters.SetUpHeroRealmsPlayersPresenter
 import kotlinx.android.synthetic.main.fragment_hero_realms_players.*
+import com.kostovtd.boardy.R as RApp
 
 class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_players),
     SetUpHeroRealmsPlayersView, IPlayersListener {
@@ -129,9 +133,52 @@ class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_pl
 
 
     override fun onRemovePlayerSelected(playerData: String) {
-        presenter.removePlayerFromHeroRealmsGameSession(playerData)
+        showConfirmationDialog(
+            getString(RApp.string.are_you_sure),
+            getString(RApp.string.about_to_kick_out_player, playerData.split(Constants.FIRESTORE_VALUE_SEPARATOR)[1])
+        ) { presenter.removePlayerFromHeroRealmsGameSession(playerData) }
     }
 
+
+    override fun onCurrentPlayerRemovedFromGameSession() {
+        val callback = {
+            presenter.unsubscribeGameSession()
+            finishActivity()
+        }
+        showInformationDialog(getString(RApp.string.psst),
+            getString(RApp.string.you_were_kicked_out_game_session),
+            callback)
+    }
+
+
+    override fun showConfirmationDialog(
+        title: String,
+        description: String,
+        positiveCallback: () -> Unit
+    ) {
+        activity?.let {
+            AnimatedConfirmationDialog(
+                it, title,
+                description,
+                positiveCallback,
+                AnimationType.REMOVE_PLAYER,
+                true
+            ).show()
+        }
+    }
+
+
+    override fun showInformationDialog(title: String, description: String, callback: () -> Unit) {
+        activity?.let {
+            AnimatedInformationDialog(
+                it, title,
+                description,
+                callback,
+                AnimationType.BAD_NEWS,
+                true
+            ).show()
+        }
+    }
 
     private fun setUpViewsByPlayerType(playerType: PlayerType) {
         when(playerType) {
