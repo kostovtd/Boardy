@@ -3,6 +3,7 @@ package com.kostovtd.herorealms.presenters
 import android.util.Base64
 import com.google.gson.Gson
 import com.kostovtd.boardy.data.models.GameSessionFirestore
+import com.kostovtd.boardy.data.models.GameSessionStatus
 import com.kostovtd.boardy.data.models.PlayerType
 import com.kostovtd.boardy.data.repositories.IGameSessionRepository
 import com.kostovtd.boardy.presenters.BaseGamePresenter
@@ -14,6 +15,8 @@ import kotlinx.coroutines.launch
 
 class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayersView>(),
     IGameSessionRepository {
+
+    var wasBackClicked: Boolean = false
 
 
     fun generateQRCode() {
@@ -52,6 +55,29 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
                     }
                 } else {
                     handleError(responseStartGameSession.error)
+                }
+            }
+        }
+    }
+
+
+    fun suspendHeroRealmsGameSession() {
+        view?.let { view ->
+            scopeIO.launch {
+                scopeMainThread.launch {
+                    view.showLoading()
+                    view.disableAllViews()
+
+                    val responseSuspendGameSession = suspendGameSession()
+                    val isGameSessionSuspendedSuccessfully = handleResponse(responseSuspendGameSession)
+
+                    if (isGameSessionSuspendedSuccessfully) {
+                        scopeMainThread.launch {
+                            view.hideLoading()
+                        }
+                    } else {
+                        handleError(responseSuspendGameSession.error)
+                    }
                 }
             }
         }
@@ -128,11 +154,21 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
         super<BaseGamePresenter>.onGameSessionFirestoreUpdated(gameSessionFirestore)
 
         view?.let {
+            if(gameSessionFirestore.status == GameSessionStatus.SUSPENDED) {
+                it.onGameSessionSuspended()
+                return
+            }
+
             val userData =
                 getCurrentUserId() + Constants.FIRESTORE_VALUE_SEPARATOR + getCurrentUserEmail()
 
-            if (!gameSessionFirestore.players.contains(userData)) {
-                it.onCurrentPlayerRemovedFromGameSession()
+            if (!gameSessionFirestore.players.contains(userData) && playerType == PlayerType.PLAYER) {
+                if(!wasBackClicked) {
+                    it.onCurrentPlayerRemovedFromGameSession()
+                } else {
+                    it.finishActivity()
+                }
+                wasBackClicked = false
                 return
             }
 
@@ -143,8 +179,10 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
             )
 
             if(playerType == PlayerType.ADMIN) {
-                if (gameSessionFirestore.players.size == 2) {
+                if (gameSessionFirestore.players.size >= 2) {
                     it.enableStartGame()
+                } else {
+                    it.disableStartGame()
                 }
             }
 

@@ -2,6 +2,7 @@ package com.kostovtd.herorealms.presenters
 
 import com.kostovtd.boardy.data.models.BoardGameGameSession
 import com.kostovtd.boardy.data.models.GameSessionFirestore
+import com.kostovtd.boardy.data.models.GameSessionStatus
 import com.kostovtd.boardy.data.repositories.GameSessionRepository
 import com.kostovtd.boardy.presenters.BasePresenter
 import com.kostovtd.boardy.util.Constants
@@ -33,10 +34,11 @@ class SetUpHeroRealmsModePresenter : BasePresenter<SetUpHeroRealmsModeView>() {
             val startTime = Date().time
             val winners = ArrayList<String>()
             val startingPoints = 50
+            val status = GameSessionStatus.NOT_STARTED_YET
 
             val gameSessionFirestoreObj = GameSessionFirestore(
                 "", adminId, boardGameGameSession?.boardGameId ?: "", startTime, endTime,
-                startingPoints, players, teams, winners, losers
+                startingPoints, players, teams, winners, losers, status
             )
 
             view.showLoading()

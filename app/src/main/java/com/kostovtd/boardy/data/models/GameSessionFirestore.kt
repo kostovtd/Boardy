@@ -1,6 +1,7 @@
 package com.kostovtd.boardy.data.models
 
 import com.google.firebase.firestore.Exclude
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 
@@ -17,5 +18,20 @@ class GameSessionFirestore(
     var players: ArrayList<String> = ArrayList(), // data format {userId}|{userName}
     var teams: ArrayList<String> = ArrayList(), // data format {userId}|{userName}
     var winners: ArrayList<String> = ArrayList(), // data format {userId}|{userName}
-    var losers: ArrayList<String> = ArrayList() // data format {userId}|{userName}
+    var losers: ArrayList<String> = ArrayList(), // data format {userId}|{userName}
+    var status: GameSessionStatus = GameSessionStatus.NONE
 ): Serializable
+
+
+enum class GameSessionStatus {
+    @SerializedName("NONE")
+    NONE,
+    @SerializedName("NOT_STARTED_YET")
+    NOT_STARTED_YET,
+    @SerializedName("ACTIVE")
+    ACTIVE,
+    @SerializedName("SUSPENDED")
+    SUSPENDED,
+    @SerializedName("FINISHED")
+    FINISHED
+}

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.dynamicfeatures.fragment.DynamicNavHostFragment
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.play.core.splitcompat.SplitCompat
 import com.kostovtd.boardy.data.models.BoardGameGameSession
@@ -14,6 +15,7 @@ import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.util.MessageHandler
 import com.kostovtd.herorealms.R
 import com.kostovtd.herorealms.presenters.HeroRealmsPresenter
+import com.kostovtd.herorealms.views.fragments.SetUpHeroRealmsPlayersFragment
 import kotlinx.android.synthetic.main.activity_hero_realms.*
 
 
@@ -88,7 +90,19 @@ class HeroRealmsActivity : AppCompatActivity(), HeroRealmsView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         item.let {
             when (it.itemId) {
-                android.R.id.home -> onBackPressed()
+                android.R.id.home -> {
+
+                    val currentFragment = supportFragmentManager.primaryNavigationFragment
+                    if(currentFragment is DynamicNavHostFragment) {
+                        if(currentFragment.childFragmentManager.primaryNavigationFragment is SetUpHeroRealmsPlayersFragment) {
+                            return false
+                        } else {
+                            onBackPressed()
+                        }
+                    } else {
+                        onBackPressed()
+                    }
+                }
             }
             return true
         }

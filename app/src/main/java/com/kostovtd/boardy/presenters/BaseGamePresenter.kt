@@ -60,6 +60,25 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
         view?.let {
             boardGameGameSession?.gameSessionId?.let { gameSessionId ->
                 gameSessionFirestore?.endTime = Date().time
+                gameSessionFirestore?.status = GameSessionStatus.FINISHED
+                gameSessionDatabase?.active = false
+
+                return gameSessionRepository.updateGameSession(
+                    gameSessionId,
+                    gameSessionFirestore,
+                    gameSessionDatabase
+                )
+            }
+        } ?: run {
+            return Resource(ResourceStatus.ERROR, null)
+        }
+    }
+
+
+    suspend fun suspendGameSession(): Resource<BaseFirebaseResponse> {
+        view?.let {
+            boardGameGameSession?.gameSessionId?.let { gameSessionId ->
+                gameSessionFirestore?.status = GameSessionStatus.SUSPENDED
                 gameSessionDatabase?.active = false
 
                 return gameSessionRepository.updateGameSession(

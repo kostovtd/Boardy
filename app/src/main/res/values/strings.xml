@@ -19,9 +19,15 @@
     <string name="ok">OK</string>
     <string name="got_it">Got it</string>
     <string name="psst">Pssst…</string>
+    <string name="yay">Yay!</string>
+    <string name="bad_news">Bad news</string>
     <string name="are_you_sure">You sure?</string>
     <string name="about_to_kick_out_player">You are about to kick out %s</string>
     <string name="you_were_kicked_out_game_session">You were kicked out of this game session</string>
+    <string name="you_are_about_to_leave_game_session_admin">You are the admin of the current game session and you are about to leave it. This will end the game session.</string>
+    <string name="you_are_about_to_leave_game_session_player">You are about to leave this game session</string>
+    <string name="game_session_suspended_admin">Congrats! The game session is suspended and you screw your mates! Happy now?</string>
+    <string name="game_session_suspended_player">Uumm… Sorry but the game session was cold-heartedly suspended by the admin!</string>
 
     <!-- ERROR MESSAGES -->
     <string name="something_went_wrong">Someting went wrong. Please, try again!</string>

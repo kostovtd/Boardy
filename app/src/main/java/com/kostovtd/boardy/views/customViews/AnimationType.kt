@@ -22,6 +22,12 @@ enum class AnimationType(val animations: HashMap<Int, Boolean>) {
         )
     ),
 
+    SUCCESS(
+        hashMapOf(
+            Pair(R.raw.animation_clapping_hands, false)
+        )
+    ),
+
     ATTENTION(
         hashMapOf(
             Pair(R.raw.animation_attention_1, false),
