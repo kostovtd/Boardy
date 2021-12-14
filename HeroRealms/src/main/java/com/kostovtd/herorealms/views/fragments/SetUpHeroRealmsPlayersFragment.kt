@@ -59,7 +59,7 @@ class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_pl
             if(presenter.playerType == PlayerType.PLAYER) {
                 presenter.getGameSessionByIdAndAddCurrentUserToGameSession()
             } else {
-                presenter.subscribeGameSession()
+                presenter.subscribeHeroRealmsGameSession()
             }
         }
 
@@ -75,7 +75,7 @@ class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_pl
 
 
     override fun onDestroy() {
-        presenter.unsubscribeGameSession()
+        presenter.unsubscribeHeroRealmsGameSession()
         super.onDestroy()
     }
 
@@ -187,7 +187,7 @@ class SetUpHeroRealmsPlayersFragment : Fragment(R.layout.fragment_hero_realms_pl
 
     override fun onCurrentPlayerRemovedFromGameSession() {
         val callback = {
-            presenter.unsubscribeGameSession()
+            presenter.unsubscribeHeroRealmsGameSession()
             finishActivity()
         }
         showInformationDialog(getString(RApp.string.psst),

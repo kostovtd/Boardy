@@ -21,7 +21,7 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     var boardGameGameSession: BoardGameGameSession? = null
 
 
-    suspend fun startGameSession(): Resource<BaseFirebaseResponse> {
+    protected suspend fun startGameSession(): Resource<BaseFirebaseResponse> {
         view?.let {
             boardGameGameSession?.gameSessionId?.let { gameSessionId ->
                 gameSessionFirestore?.startTime = Date().time
@@ -39,7 +39,7 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     }
 
 
-    suspend fun getGameSessionById(gameSessionId: String): Resource<GameSessionByIdResult> {
+    protected suspend fun getGameSessionById(gameSessionId: String): Resource<GameSessionByIdResult> {
         view?.let {
             val response = gameSessionRepository.getGameSessionById(gameSessionId)
             val isGameSessionFetched = handleResponse(response)
@@ -56,7 +56,7 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     }
 
 
-    suspend fun endGameSession(): Resource<BaseFirebaseResponse> {
+    protected suspend fun endGameSession(): Resource<BaseFirebaseResponse> {
         view?.let {
             boardGameGameSession?.gameSessionId?.let { gameSessionId ->
                 gameSessionFirestore?.endTime = Date().time
@@ -75,7 +75,7 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     }
 
 
-    suspend fun suspendGameSession(): Resource<BaseFirebaseResponse> {
+    protected suspend fun suspendGameSession(): Resource<BaseFirebaseResponse> {
         view?.let {
             boardGameGameSession?.gameSessionId?.let { gameSessionId ->
                 gameSessionFirestore?.status = GameSessionStatus.SUSPENDED
@@ -93,7 +93,7 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     }
 
 
-    fun subscribeGameSession() {
+    protected fun subscribeGameSession() {
         view?.let {
             boardGameGameSession?.gameSessionId?.let { gameSessionId ->
                 subscribeGameSessionFirestore(gameSessionId)
@@ -103,7 +103,7 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     }
 
 
-    fun unsubscribeGameSession() {
+    protected fun unsubscribeGameSession() {
         view?.let {
             unsubscribeGameSessionFirebase()
             gameSessionDatabase?.id?.let { unsubscribeGameSessionDatabase(it) }
@@ -111,7 +111,7 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     }
 
 
-    suspend fun addPlayerToGameSession(
+    protected suspend fun addPlayerToGameSession(
         userId: String,
         userEmail: String,
         points: Int,
@@ -143,7 +143,7 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
     }
 
 
-    suspend fun removePlayerFromGameSession(playerData: String): Resource<BaseFirebaseResponse> {
+    protected suspend fun removePlayerFromGameSession(playerData: String): Resource<BaseFirebaseResponse> {
         view?.let {
             gameSessionFirestore?.players?.remove(playerData)
             gameSessionFirestore?.teams?.remove(playerData)

@@ -37,6 +37,20 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
     }
 
 
+    fun subscribeHeroRealmsGameSession() {
+        view?.let {
+            subscribeGameSession()
+        }
+    }
+
+
+    fun unsubscribeHeroRealmsGameSession() {
+        view?.let {
+            unsubscribeGameSession()
+        }
+    }
+
+
     fun startHeroRealmsGameSession() {
         view?.let { view ->
             scopeIO.launch {
