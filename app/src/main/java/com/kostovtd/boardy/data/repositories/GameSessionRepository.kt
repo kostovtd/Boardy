@@ -14,6 +14,7 @@ import com.kostovtd.boardy.util.Constants.GAME_SESSIONS_COLLECTION_PATH
 import com.kostovtd.boardy.util.Constants.GAME_SESSION_CHILD
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.web.APIClient
+import com.kostovtd.boardy.web.bodies.IncrementPointsBody
 import com.kostovtd.boardy.web.bodies.UpdateGameSessionBody
 import com.kostovtd.boardy.web.responses.BaseFirebaseResponse
 import com.kostovtd.boardy.web.responses.CreateGameSessionResponse
@@ -67,6 +68,23 @@ class GameSessionRepository {
         return if (response.success) {
             Resource(ResourceStatus.SUCCESS, response)
         } else { //TODO Add other network error handling
+            Resource(ResourceStatus.ERROR, null, ErrorType.FIRESTORE_UPDATE_GAME_SESSION)
+        }
+    }
+
+
+    suspend fun changePoints(
+        gameSessionId: String,
+        playerId: String,
+        points: Int
+    ): Resource<BaseFirebaseResponse> {
+        val incrementPointsBody = IncrementPointsBody(gameSessionId, playerId, points)
+
+        val response = APIClient.firebaseAPI.changePoints(incrementPointsBody)
+
+        return if(response.success) {
+            Resource(ResourceStatus.SUCCESS, response)
+        } else {
             Resource(ResourceStatus.ERROR, null, ErrorType.FIRESTORE_UPDATE_GAME_SESSION)
         }
     }

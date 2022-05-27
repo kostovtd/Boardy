@@ -25,6 +25,7 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
         view?.let {
             boardGameGameSession?.gameSessionId?.let { gameSessionId ->
                 gameSessionFirestore?.startTime = Date().time
+                gameSessionFirestore?.status = GameSessionStatus.ACTIVE
                 gameSessionDatabase?.active = true
 
                 return gameSessionRepository.updateGameSession(
@@ -155,6 +156,22 @@ open class BaseGamePresenter<T> : BasePresenter<T>(), IGameSessionRepository {
                     gameSessionFirestore,
                     gameSessionDatabase
                 )
+            }
+        } ?: run {
+            return Resource(ResourceStatus.ERROR, null)
+        }
+    }
+
+
+    protected suspend fun changePoints(
+        points: Int
+    ): Resource<BaseFirebaseResponse> {
+        view?.let {
+            boardGameGameSession?.gameSessionId?.let { gameSessionId ->
+                val currentUserId = getCurrentUserId()
+                currentUserId?.let { playerId ->
+                    return gameSessionRepository.changePoints(gameSessionId, playerId, points)
+                }
             }
         } ?: run {
             return Resource(ResourceStatus.ERROR, null)

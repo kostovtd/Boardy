@@ -6,14 +6,10 @@ import com.kostovtd.boardy.data.models.PlayerType
 import com.kostovtd.boardy.data.repositories.IGameSessionRepository
 import com.kostovtd.boardy.presenters.BaseGamePresenter
 import com.kostovtd.boardy.util.ErrorType
-import com.kostovtd.boardy.views.activities.BaseView
 import com.kostovtd.herorealms.views.fragments.HeroRealmsGameView
 import kotlinx.coroutines.launch
 
-class HeroRealmsGamePresenter: BaseGamePresenter<HeroRealmsGameView>(), IGameSessionRepository {
-
-    var gameSessionId: String? = null
-
+class HeroRealmsGamePresenter : BaseGamePresenter<HeroRealmsGameView>(), IGameSessionRepository {
 
     fun subscribeToGameSession() {
         view?.let {
@@ -28,14 +24,23 @@ class HeroRealmsGamePresenter: BaseGamePresenter<HeroRealmsGameView>(), IGameSes
     }
 
 
+    fun changePlayerPoints(points: Int) {
+        view?.let {
+            scopeIO.launch {
+                changePoints(points)
+            }
+        }
+    }
+
+
     override fun onGameSessionFirestoreUpdated(gameSessionFirestore: GameSessionFirestore) {
         view?.let { view ->
             view.updateGameSessionInfo(gameSessionFirestore)
 
             gameSessionFirestore.endTime?.let { endTime ->
                 gameSessionFirestore.startTime?.let { startTime ->
-                    if(endTime > startTime) {
-//                gameSessionRepository.unsubscribeGameSessionFirestore()
+                    if (endTime > startTime) {
+                        unsubscribeGameSession()
                         view.finishActivity()
                     }
                 }
@@ -52,28 +57,20 @@ class HeroRealmsGamePresenter: BaseGamePresenter<HeroRealmsGameView>(), IGameSes
     override fun onGameSessionDatabaseUpdated(gameSessionDatabase: GameSessionDatabase) {
         view?.let { view ->
             view.updatePoints(gameSessionDatabase.points)
+            val gameEnded = gameSessionDatabase.points.containsValue(0)
 
-            if(playerType == PlayerType.ADMIN) {
-                val gameEnded = gameSessionDatabase.points.containsValue(0)
-                if(gameEnded) {
-                    scopeIO.launch {
-                        val responseEndGameSession = endGameSession()
-
-                        val isGameSessionEnded = handleResponse(responseEndGameSession)
-
-                        if (isGameSessionEnded) {
-                            scopeMainThread.launch {
-                                (view as BaseView).hideLoading()
-                                (view as BaseView).enableAllViews()
-                            }
-                        } else {
-                            handleError(responseEndGameSession.error)
-                        }
+            if (gameEnded && playerType == PlayerType.ADMIN) {
+                scopeIO.launch {
+                    val responseEndGameSession = endGameSession()
+                    val isGameSessionEnded = handleResponse(responseEndGameSession)
+                    if (!isGameSessionEnded) {
+                        handleError(responseEndGameSession.error)
                     }
                 }
             }
         }
     }
+
 
     override fun onGameSessionDatabaseUpdateError(errorType: ErrorType) {
 //        super.onGameSessionDatabaseUpdateError(errorType)

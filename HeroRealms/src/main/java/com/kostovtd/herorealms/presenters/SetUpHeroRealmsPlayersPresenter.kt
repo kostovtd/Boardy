@@ -62,12 +62,7 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
                 val responseStartGameSession = startGameSession()
                 val isGameSessionStartedSuccessfully = handleResponse(responseStartGameSession)
 
-                if (isGameSessionStartedSuccessfully) {
-                    scopeMainThread.launch {
-                        view.hideLoading()
-                        view.enableAllViews()
-                    }
-                } else {
+                if (!isGameSessionStartedSuccessfully) {
                     handleError(responseStartGameSession.error)
                 }
             }
@@ -151,7 +146,7 @@ class SetUpHeroRealmsPlayersPresenter : BaseGamePresenter<SetUpHeroRealmsPlayers
                             view.enableAllViews()
                             view.hideLoading()
 
-                            if(gameSessionFirestore?.players?.size ?: 0 < 2) {
+                            if((gameSessionFirestore?.players?.size ?: 0) < 2) {
                                 view.disableStartGame()
                             }
                         }
