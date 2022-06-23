@@ -7,6 +7,8 @@ import com.google.android.play.core.splitinstall.SplitInstallRequest
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import com.kostovtd.boardy.BuildConfig
 import com.kostovtd.boardy.data.models.BoardGameGameSession
+import com.kostovtd.boardy.data.models.GameSessionDatabase
+import com.kostovtd.boardy.data.models.GameSessionFirestore
 import com.kostovtd.boardy.data.models.PlayerType
 
 /**
@@ -47,16 +49,22 @@ fun uninstallModules(context: Context, moduleNames: List<String>) {
     }
 }
 
-fun startBoardGameModuleAs(playerType: PlayerType, context: Context, boardGameGameSession: BoardGameGameSession) {
+fun startBoardGameModuleAs(
+    playerType: PlayerType, context: Context, boardGameGameSession: BoardGameGameSession,
+    gameSessionFirestore: GameSessionFirestore? = null, database: GameSessionDatabase? = null
+) {
     val intent = Intent()
 
     intent.setClassName(
         BuildConfig.APPLICATION_ID,
-        "com.kostovtd.${boardGameGameSession.packageName}.views.activities.${boardGameGameSession.activityName}"
+        "com.kostovtd.${boardGameGameSession.packageName}.ui.activities.${boardGameGameSession.activityName}"
     )
 
     intent.putExtra(Constants.PLAYER_TYPE_KEY, playerType)
     intent.putExtra(Constants.BOARD_GAME_GAME_SESSION_KEY, boardGameGameSession)
+
+    gameSessionFirestore?.let { intent.putExtra(Constants.GAME_SESSION_FIRESTORE_KEY, it) }
+    database?.let { intent.putExtra(Constants.GAME_SESSION_DATABASE_KEY, it) }
 
     context.startActivity(intent)
 }

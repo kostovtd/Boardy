@@ -13,6 +13,6 @@
     </dist:module>
 
     <application>
-        <activity android:name=".views.activities.HeroRealmsActivity"/>
+        <activity android:name=".ui.activities.HeroRealmsActivity"/>
     </application>
 </manifest>

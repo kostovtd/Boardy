@@ -9,8 +9,8 @@ import androidx.test.rule.ActivityTestRule
 import com.google.firebase.auth.FirebaseAuth
 import com.kostovtd.boardy.R
 import com.kostovtd.boardy.data.repositories.UserRepository
+import com.kostovtd.boardy.ui.activities.SignUpActivity
 import com.kostovtd.boardy.utils.*
-import com.kostovtd.boardy.views.activities.SignUpActivity
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic

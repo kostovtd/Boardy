@@ -23,11 +23,13 @@
     <string name="bad_news">Bad news</string>
     <string name="are_you_sure">You sure?</string>
     <string name="about_to_kick_out_player">You are about to kick out %s</string>
-    <string name="you_were_kicked_out_game_session">You were kicked out of this game session</string>
+    <string name="you_were_kicked_out_game_session">You are no longer in this game session</string>
     <string name="you_are_about_to_leave_game_session_admin">You are the admin of the current game session and you are about to leave it. This will end the game session.</string>
     <string name="you_are_about_to_leave_game_session_player">You are about to leave this game session</string>
     <string name="game_session_suspended_admin">Congrats! The game session is suspended and you screw your mates! Happy now?</string>
     <string name="game_session_suspended_player">Uumm… Sorry but the game session was cold-heartedly suspended by the admin!</string>
+    <string name="you_are_a_winner">You are a winner</string>
+    <string name="you_are_a_loser">You are a loser</string>
 
     <!-- ERROR MESSAGES -->
     <string name="something_went_wrong">Someting went wrong. Please, try again!</string>
@@ -41,4 +43,9 @@
     <string name="weak_password">Your password is too weak</string>
     <string name="email_is_already_in_use">The email is already in use</string>
     <string name="qr_scanning_failed">Scanning failed. Please, try again!</string>
+    <string name="data_could_not_be_updated_error">Data could not be updated</string>
+    <string name="data_could_not_be_loaded_error">Data could not be loaded</string>
+    <string name="can_not_create_game_session_error">Game session can not be created</string>
+    <string name="qr_code_can_not_be_created_error">QR code can not be created</string>
+    <string name="add_current_player_to_game_session_error">Can not add current player to game session</string>
 </resources>

@@ -2,9 +2,9 @@ package com.kostovtd.boardy.presenters
 
 import androidx.annotation.VisibleForTesting
 import androidx.core.util.PatternsCompat
-import com.kostovtd.boardy.data.repositories.UserRepository
-import com.kostovtd.boardy.views.activities.SignUpView
 import com.kostovtd.boardy.data.repositories.ResourceStatus
+import com.kostovtd.boardy.data.repositories.UserRepository
+import com.kostovtd.boardy.ui.activities.SignUpView
 import com.kostovtd.boardy.util.ErrorType
 import kotlinx.coroutines.launch
 

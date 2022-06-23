@@ -7,14 +7,17 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
-import com.kostovtd.boardy.views.activities.SignInActivity
+import com.kostovtd.boardy.R
+import com.kostovtd.boardy.ui.activities.SignInActivity
+import com.kostovtd.boardy.utils.expect
+import com.kostovtd.boardy.utils.expectSnackbarWithTextResource
+import com.kostovtd.boardy.utils.expectWithDescendantText
+import com.kostovtd.boardy.utils.withTextResource
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.kostovtd.boardy.R
-import com.kostovtd.boardy.utils.*
 
 /**
  * Created by tosheto on 22.11.20.

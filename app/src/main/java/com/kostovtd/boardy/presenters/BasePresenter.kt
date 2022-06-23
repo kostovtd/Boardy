@@ -5,8 +5,8 @@ import com.google.gson.reflect.TypeToken
 import com.kostovtd.boardy.data.repositories.Resource
 import com.kostovtd.boardy.data.repositories.ResourceStatus
 import com.kostovtd.boardy.data.repositories.UserRepository
+import com.kostovtd.boardy.ui.activities.BaseView
 import com.kostovtd.boardy.util.ErrorType
-import com.kostovtd.boardy.views.activities.BaseView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

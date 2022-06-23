@@ -3,7 +3,7 @@ package com.kostovtd.boardy.tests.ui
 import android.content.Intent
 import androidx.test.espresso.IdlingResource
 import androidx.test.rule.ActivityTestRule
-import com.kostovtd.boardy.views.activities.BaseActivity
+import com.kostovtd.boardy.ui.activities.BaseActivity
 
 
 /**

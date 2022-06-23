@@ -1,8 +1,7 @@
 package com.kostovtd.boardy.web
 
 import com.kostovtd.boardy.data.models.GameSessionFirestore
-import com.kostovtd.boardy.web.bodies.IncrementPointsBody
-import com.kostovtd.boardy.web.bodies.UpdateGameSessionBody
+import com.kostovtd.boardy.web.bodies.*
 import com.kostovtd.boardy.web.responses.BaseFirebaseResponse
 import com.kostovtd.boardy.web.responses.BoardgamesByNameResult
 import com.kostovtd.boardy.web.responses.CreateGameSessionResponse
@@ -30,4 +29,14 @@ interface FirebaseAPI {
 
     @POST("changeRealtimeDatabasePoints")
     suspend fun changePoints(@Body body: IncrementPointsBody): BaseFirebaseResponse
+
+    @POST("changeGameSessionStatus")
+    suspend fun changeGameSessionStatus(@Body body: ChangeGameSessionStatusBody): BaseFirebaseResponse
+
+    @POST("addPlayerToGameSession")
+    suspend fun addPlayerToGameSession(@Body body: AddPlayerToGameSessionBody): BaseFirebaseResponse
+
+    @POST("removePlayerFromGameSession")
+    suspend fun removePlayerFromGameSession(@Body body: RemovePlayerFromGameSessionBody): BaseFirebaseResponse
+
 }

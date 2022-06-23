@@ -10,15 +10,22 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.kostovtd.boardy.data.models.GameSessionDatabase
 import com.kostovtd.boardy.data.models.GameSessionFirestore
+import com.kostovtd.boardy.data.models.GameSessionStatus
 import com.kostovtd.boardy.util.Constants.GAME_SESSIONS_COLLECTION_PATH
 import com.kostovtd.boardy.util.Constants.GAME_SESSION_CHILD
 import com.kostovtd.boardy.util.ErrorType
 import com.kostovtd.boardy.web.APIClient
+import com.kostovtd.boardy.web.bodies.AddPlayerToGameSessionBody
+import com.kostovtd.boardy.web.bodies.ChangeGameSessionStatusBody
 import com.kostovtd.boardy.web.bodies.IncrementPointsBody
-import com.kostovtd.boardy.web.bodies.UpdateGameSessionBody
+import com.kostovtd.boardy.web.bodies.RemovePlayerFromGameSessionBody
 import com.kostovtd.boardy.web.responses.BaseFirebaseResponse
 import com.kostovtd.boardy.web.responses.CreateGameSessionResponse
+import com.kostovtd.boardy.web.responses.GameSessionByIdData
 import com.kostovtd.boardy.web.responses.GameSessionByIdResult
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 /**
  * Created by tosheto on 16.02.21.
@@ -33,17 +40,18 @@ class GameSessionRepository {
 
     suspend fun createGameSession(
         gameSessionFirestore: GameSessionFirestore
-    ): Resource<CreateGameSessionResponse> {
+    ): ResourceWithMessage<CreateGameSessionResponse> {
         val response = APIClient.firebaseAPI.postCreateGameSession(gameSessionFirestore)
 
         return if (response.success) {
-            Resource(ResourceStatus.SUCCESS, response)
-        } else { //TODO Add other network error handling
-            Resource(ResourceStatus.ERROR, null, ErrorType.FIREBASE_CREATE_GAME_SESSION)
+            ResourceWithMessage(ResourceStatus.SUCCESS, response)
+        } else {
+            ResourceWithMessage(ResourceStatus.ERROR, null, MessageType.CREATE_GAME_SESSION_ERROR)
         }
     }
 
 
+    @Deprecated("Use getGameSessionByIdV2")
     suspend fun getGameSessionById(gameSessionId: String): Resource<GameSessionByIdResult> {
         val response = APIClient.firebaseAPI.getGameSessionById(gameSessionId)
 
@@ -55,20 +63,40 @@ class GameSessionRepository {
     }
 
 
-    suspend fun updateGameSession(
-        gameSessionId: String,
-        gameSessionFirestore: GameSessionFirestore?,
-        gameSessionDatabase: GameSessionDatabase?
-    ): Resource<BaseFirebaseResponse> {
-        val updateGameSessionBody =
-            UpdateGameSessionBody(gameSessionId, gameSessionFirestore, gameSessionDatabase)
-
-        val response = APIClient.firebaseAPI.postUpdateGameSession(updateGameSessionBody)
+    suspend fun getGameSessionByIdV2(gameSessionId: String): ResourceWithMessage<GameSessionByIdData> {
+        val response = APIClient.firebaseAPI.getGameSessionById(gameSessionId)
 
         return if (response.success) {
-            Resource(ResourceStatus.SUCCESS, response)
-        } else { //TODO Add other network error handling
-            Resource(ResourceStatus.ERROR, null, ErrorType.FIRESTORE_UPDATE_GAME_SESSION)
+            ResourceWithMessage(ResourceStatus.SUCCESS, response.data)
+        } else {
+            ResourceWithMessage(
+                ResourceStatus.ERROR,
+                null,
+                MessageType.FIREBASE_GET_GAME_SESSION_BY_ID_ERROR
+            )
+        }
+    }
+
+
+    suspend fun changeGameSessionStatus(
+        gameSessionId: String,
+        status: GameSessionStatus
+    ): ResourceWithMessage<BaseFirebaseResponse> {
+        val response = APIClient.firebaseAPI.changeGameSessionStatus(
+            ChangeGameSessionStatusBody(
+                gameSessionId,
+                status
+            )
+        )
+
+        return if (response.success) {
+            ResourceWithMessage(ResourceStatus.SUCCESS, response)
+        } else {
+            ResourceWithMessage(
+                ResourceStatus.ERROR,
+                null,
+                MessageType.FIRESTORE_UPDATE_GAME_SESSION_ERROR
+            )
         }
     }
 
@@ -77,68 +105,71 @@ class GameSessionRepository {
         gameSessionId: String,
         playerId: String,
         points: Int
-    ): Resource<BaseFirebaseResponse> {
+    ): ResourceWithMessage<BaseFirebaseResponse> {
         val incrementPointsBody = IncrementPointsBody(gameSessionId, playerId, points)
 
         val response = APIClient.firebaseAPI.changePoints(incrementPointsBody)
 
-        return if(response.success) {
-            Resource(ResourceStatus.SUCCESS, response)
+        return if (response.success) {
+            ResourceWithMessage(ResourceStatus.SUCCESS, response)
         } else {
-            Resource(ResourceStatus.ERROR, null, ErrorType.FIRESTORE_UPDATE_GAME_SESSION)
+            ResourceWithMessage(
+                ResourceStatus.ERROR,
+                null,
+                MessageType.FIRESTORE_UPDATE_GAME_SESSION_ERROR
+            )
         }
     }
 
 
-    fun subscribeGameSessionFirestore(gameSessionId: String, listener: IGameSessionRepository) {
-        firestoreEventListener = firestore.collection(GAME_SESSIONS_COLLECTION_PATH)
-            .document(gameSessionId)
-            .addSnapshotListener { snapshot, exception ->
-                if (exception != null) {
-                    //TODO add logging logic
-                    listener.onGameSessionFirestoreUpdateError(ErrorType.UNKNOWN)
-                }
-
-                if (snapshot != null && snapshot.exists()) {
-                    if(!snapshot.metadata.isFromCache) {
-                        snapshot.toObject(GameSessionFirestore::class.java)?.let {
-                            it.id = gameSessionId
-                            listener.onGameSessionFirestoreUpdated(it)
+    fun subscribeGameSessionFirestore(gameSessionId: String): Flow<GameSessionFirestore> =
+        callbackFlow {
+            firestoreEventListener = firestore.collection(GAME_SESSIONS_COLLECTION_PATH)
+                .document(gameSessionId)
+                .addSnapshotListener { snapshot, _ ->
+                    if (snapshot != null && snapshot.exists()) {
+                        if (!snapshot.metadata.isFromCache) {
+                            snapshot.toObject(GameSessionFirestore::class.java)?.let {
+                                it.id = gameSessionId
+                                trySend(it)
+                            }
                         }
                     }
-                } else {
-                    //TODO add logging logic
-                    listener.onGameSessionFirestoreUpdateError(ErrorType.UNKNOWN)
                 }
+
+            awaitClose {
+                unsubscribeGameSessionFirestore()
             }
-    }
+        }
 
 
     fun unsubscribeGameSessionFirestore() = firestoreEventListener?.remove()
 
 
     fun subscribeGameSessionDatabase(
-        gameSessionId: String,
-        listener: IGameSessionRepository
-    ) {
+        gameSessionId: String
+    ): Flow<GameSessionDatabase> = callbackFlow {
         databaseEventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val gameSessionDatabase = dataSnapshot.getValue<GameSessionDatabase>()
                 gameSessionDatabase?.let { gameSession ->
                     gameSession.id = gameSessionId
-                    listener.onGameSessionDatabaseUpdated(gameSession)
+                    trySend(gameSession)
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                //TODO add logging logic
-                listener.onGameSessionDatabaseUpdateError(ErrorType.DATABASE_FIND_GAME_SESSION)
+
             }
         }
 
         databaseEventListener?.let {
             database.child(GAME_SESSION_CHILD + "_" + gameSessionId)
                 .addValueEventListener(it)
+        }
+
+        awaitClose {
+            unsubscribeGameSessionDatabase(gameSessionId)
         }
     }
 
@@ -148,6 +179,49 @@ class GameSessionRepository {
             database.removeEventListener(listener)
             database.child(GAME_SESSION_CHILD + "_" + gameSessionId)
                 .removeEventListener(listener)
+        }
+    }
+
+
+    suspend fun addPlayerToGameSession(
+        gameSessionId: String,
+        playerEmail: String,
+        playerId: String,
+        points: Int
+    ): ResourceWithMessage<BaseFirebaseResponse> {
+        val addPlayerBody = AddPlayerToGameSessionBody(gameSessionId, playerEmail, playerId, points)
+
+        val response = APIClient.firebaseAPI.addPlayerToGameSession(addPlayerBody)
+
+        return if (response.success) {
+            ResourceWithMessage(ResourceStatus.SUCCESS, response)
+        } else {
+            ResourceWithMessage(
+                ResourceStatus.ERROR,
+                null,
+                MessageType.FIRESTORE_UPDATE_GAME_SESSION_ERROR
+            )
+        }
+    }
+
+
+    suspend fun removePlayerFromGameSession(
+        gameSessionId: String,
+        playerId: String,
+        playerEmail: String
+    ): ResourceWithMessage<BaseFirebaseResponse> {
+        val removePlayerBody = RemovePlayerFromGameSessionBody(gameSessionId, playerId, playerEmail)
+
+        val response = APIClient.firebaseAPI.removePlayerFromGameSession(removePlayerBody)
+
+        return if (response.success) {
+            ResourceWithMessage(ResourceStatus.SUCCESS, response)
+        } else {
+            ResourceWithMessage(
+                ResourceStatus.ERROR,
+                null,
+                MessageType.FIRESTORE_UPDATE_GAME_SESSION_ERROR
+            )
         }
     }
 }

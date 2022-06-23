@@ -23,6 +23,7 @@ object Constants {
     const val BOARD_GAME_ID_KEY = "boardGameId"
     const val BOARD_GAME_KEY = "boardGame"
     const val GAME_SESSION_FIRESTORE_KEY = "gameSessionFirestore"
+    const val GAME_SESSION_DATABASE_KEY = "gameSessionDatabase"
     const val PLAYER_TYPE_KEY = "playerType"
     const val BOARD_GAME_GAME_SESSION_KEY = "boardGameGameSession"
 }

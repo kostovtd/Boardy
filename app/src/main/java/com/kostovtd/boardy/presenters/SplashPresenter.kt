@@ -1,6 +1,6 @@
 package com.kostovtd.boardy.presenters
 
-import com.kostovtd.boardy.views.activities.SplashView
+import com.kostovtd.boardy.ui.activities.SplashView
 
 /**
  * Created by tosheto on 22.11.20.

@@ -1,7 +1,7 @@
 package com.kostovtd.boardy
 
 import com.kostovtd.boardy.presenters.SignUpPresent
-import com.kostovtd.boardy.views.activities.SignUpView
+import com.kostovtd.boardy.ui.activities.SignUpView
 import io.mockk.mockk
 import io.mockk.spyk
 import org.junit.Assert.assertFalse
